@@ -132,6 +132,34 @@ Audit Log
 Response
 ```
 
+## Python Backend Safety Layer
+
+The Python backend (`src/backend/safety/`) provides a second independent safety layer that runs at the agent level, before and after any Claude API call.
+
+### Input Validation (`input_validation.py`)
+
+Checks run in this priority order (earlier checks short-circuit later ones):
+1. **Self-harm** — highest priority. Returns 988/Crisis Line message as a 200 (never a 4xx — don't fail-silent on a person in crisis)
+2. **Prompt injection** — 8 patterns covering jailbreak, role substitution, instruction override, SQL injection
+3. **Prescription requests** — 5 patterns; blocked with "contact your provider" message
+4. **Diagnosis requests** — 4 patterns; blocked with care navigation redirect
+5. **PII detection** — SSN, credit card, phone, email; redacted and flagged but not blocked (clinical context may legitimately include contact info)
+6. Empty input / length limits (max 2,000 chars)
+
+### Output Filtering (`output_filters.py`)
+
+7 blocked patterns that replace the response entirely:
+- Diagnosis assertions ("you likely have X")
+- Dosing instructions ("take X mg")
+- "I diagnose" / "I prescribe" language
+- Dismissive advice ("you don't need a doctor")
+
+Confidence threshold: responses below 65% confidence are flagged with a note to the user.
+
+All output has PII redacted via `redact_pii_for_logs()` before any storage.
+
+---
+
 ## Known Limitations (Demo vs Production)
 
 | Feature | Demo State | Production Required |
@@ -141,3 +169,4 @@ Response
 | Encryption key | Derived from constant in dev | Rotate via FIELD_ENCRYPTION_KEY |
 | Audit persistence | In-memory + Supabase attempt | Supabase with RLS enforced |
 | HIPAA BAA | Not applicable (demo) | Required with Supabase, Anthropic, Vercel |
+| Python backend auth | No auth between TS and Python services | mTLS or shared secret header in production |

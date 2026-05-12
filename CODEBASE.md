@@ -2,6 +2,8 @@
 
 ## File-by-File Breakdown
 
+> The platform has two layers: TypeScript (Next.js) for the frontend + API gateway, and Python (FastAPI + LangGraph) for the backend intelligence. See API_DOCS.md for endpoint reference and SCORING.md for the risk algorithm.
+
 ### `src/lib/mockData.ts`
 50 member profiles with realistic clinical profiles, 50+ claims with real CPT/ICD-10 codes, triage history, chat history, and preventive campaigns.
 
@@ -135,3 +137,56 @@ scoreRisk(member, claims)
 | Rate limit hit | 429 with `Retry-After` header |
 | PII in input | 400 with redacted error message (PII never echoed back) |
 | Harmful AI output | Replace with safe alternative, log `guardrail_triggered` |
+| Python backend unavailable | TS triage route falls back to direct Claude call silently |
+
+---
+
+## Python Backend (`src/backend/`)
+
+### `src/backend/agents/triage_agent.py`
+
+**LangGraph workflow (5 nodes):**
+```
+validate_input → enrich_with_history → call_claude_triage → parse_and_route → calculate_cost_impact
+```
+- `validate_input`: runs Python safety layer — self-harm (returns 988 immediately), injection, PII redaction
+- `enrich_with_history`: fetches member, 50 claims, 5 prior triages; computes current risk score
+- `call_claude_triage`: `claude-opus-4-7` + `thinking: {budget_tokens: 800}`. System prompt injects member age, conditions, meds, risk tier, triage history. Forces JSON output.
+- `parse_and_route`: parses JSON, validates against enum, applies severity override
+- `calculate_cost_impact`: compares recommended vs. ER cost; persists outcome; applies output filter
+
+### `src/backend/agents/claims_agent.py`
+
+**LangGraph workflow (4 nodes):**
+```
+fetch_claims → parse_and_score → call_claude_insights → rank_campaigns
+```
+Key design: Claude receives *structured analysis output* from the scoring engine — not raw CPT codes. This produces more accurate, evidence-grounded campaign narratives. Fallback to scoring-engine-only campaigns if Claude JSON fails.
+
+### `src/backend/agents/outcome_tracker.py`
+
+**LangGraph workflow (5 nodes):**
+```
+load_outcomes → compute_adherence → calculate_cost_impact → adjust_risk_score → summarize
+```
+No Claude call — pure actuarial logic. Adherence ≥80% → -5 risk pts; <40% → +5 risk pts. This is the feedback loop that lets risk scores evolve based on member engagement.
+
+### `src/backend/scoring/risk_calculator.py`
+
+Five-dimension weighted model. See SCORING.md for full algorithm with example calculation. Key: comorbidity multiplier (1.15–1.35×) reflects clinical reality that conditions interact non-linearly.
+
+### `src/backend/scoring/claims_analyzer.py`
+
+ICD-10 prefix matching → condition labels. CPT code bucketing → care setting categories. Pattern detection: ER overuse (≥3 visits), no PCP follow-up post-hospitalization, 30-day readmission, zero preventive visits. Condition-specific prevention gaps with estimated savings.
+
+### `src/backend/database/`
+
+- `client.py`: lazy Supabase init, `MockSupabase` fallback that mirrors the supabase-py API surface exactly
+- `queries.py`: typed functions for all DB operations; all have retry with exponential backoff
+- `seeder.py`: reproducible (seeded random) generation of 100 members + 500+ claims. Run once: `PYTHONPATH=. python -m src.backend.database.seeder`
+
+### `src/backend/safety/`
+
+Python safety layer mirrors the TypeScript layer but runs at the agent level:
+- `input_validation.py`: 7 check types, self-harm is checked first and short-circuits all other logic
+- `output_filters.py`: 7 blocked patterns (diagnosis assertions, dosing instructions, dismissive advice), confidence threshold flagging, disclaimer injection

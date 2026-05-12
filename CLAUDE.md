@@ -6,7 +6,9 @@
 
 A production-grade healthcare AI platform covering:
 
-1. **Triage API** (`src/app/api/triage/route.ts`) — Claude with extended thinking routes members to the right care setting (emergency/urgent/telehealth/PCP/specialist/self-care). Uses member's actual conditions, medications, and claims history. Returns clinical reasoning, red flags, cost comparison, and confidence score.
+### TypeScript / Next.js Layer
+
+1. **Triage API** (`src/app/api/triage/route.ts`) — Claude with extended thinking routes members to the right care setting (emergency/urgent/telehealth/PCP/specialist/self-care). Proxies to Python backend when `PYTHON_BACKEND_URL` is set; falls back to direct Claude call. Returns clinical reasoning, red flags, cost comparison, and confidence score.
 
 2. **Chat API** (`src/app/api/chat/route.ts`) — Context-aware health guidance with member history in system prompt. Maintains conversation memory per session. Evaluates confidence before returning. Applies output guardrails.
 
@@ -16,22 +18,43 @@ A production-grade healthcare AI platform covering:
 
 5. **Safety Layer** (`src/lib/validators.ts`, `src/lib/guardrails.ts`) — Input validation (injection detection, PII detection, unsafe healthcare requests), output filtering (blocks diagnoses, harmful dosing advice, dismissive responses), disclaimer injection.
 
+### Python Backend Layer (`src/backend/`)
+
+6. **LangGraph Triage Agent** (`src/backend/agents/triage_agent.py`) — 5-node workflow: validate_input → enrich_with_history → call_claude_triage (extended thinking) → parse_and_route → calculate_cost_impact. Fetches real member claims + history from DB for context. Persists outcomes to audit log.
+
+7. **LangGraph Claims Agent** (`src/backend/agents/claims_agent.py`) — 4-node workflow: fetch_claims → parse_and_score → call_claude_insights → rank_campaigns. Scoring engine runs first; Claude receives structured analysis (not raw CPT codes) and generates narrative campaigns with ROI justification.
+
+8. **LangGraph Outcome Tracker** (`src/backend/agents/outcome_tracker.py`) — 5-node workflow tracking adherence rate, cost savings realized vs. missed, and risk score adjustment based on engagement behavior. Feedback loop for the AI to improve over time.
+
+9. **Actuarial Risk Scoring Engine** (`src/backend/scoring/risk_calculator.py`) — 5-dimension weighted model (condition burden 30%, utilization 30%, medication complexity 20%, age 10%, SDOH 10%) with comorbidity multiplier. See SCORING.md for full methodology.
+
+10. **Claims Analyzer** (`src/backend/scoring/claims_analyzer.py`) — ICD-10 prefix matching, CPT code bucketing, ER overutilization detection, 30-day readmission detection, condition-specific prevention gap identification.
+
+11. **FastAPI Backend Server** (`src/backend/api/server.py`) — Serves `/api/backend/triage`, `/api/backend/claims`, `/api/backend/health/{id}`, `/api/backend/outcomes/{id}`. CORS configured for Next.js origin.
+
+12. **Supabase Data Layer** (`src/backend/database/`) — Lazy-init client with in-memory mock fallback. Seeder generates 100 members + 500+ clinically realistic claims. All queries have retry logic with exponential backoff.
+
+13. **Python Safety Layer** (`src/backend/safety/`) — `input_validation.py`: self-harm detection (returns 988), injection/jailbreak patterns, PII redaction, prescription/diagnosis request blocking. `output_filters.py`: diagnosis assertion blocking, confidence flagging, disclaimer injection.
+
 ## Key Design Decisions
 
 ### No Diagnosis, Ever
-The system is explicitly designed to navigate care (where to go) not diagnose (what you have). All guardrail patterns and system prompts enforce this. Member-specific context is used to route more accurately (a diabetic with foot symptoms → different triage than a healthy person), not to diagnose.
+The system is explicitly designed to navigate care (where to go) not diagnose (what you have). All guardrail patterns and system prompts enforce this in both TypeScript and Python layers. Member-specific context is used to route more accurately (a diabetic with foot symptoms → different triage than a healthy person), not to diagnose.
+
+### Python Backend as Intelligence Layer
+The Python backend (`src/backend/`) is where the real actuarial intelligence lives — LangGraph multi-step workflows, comorbidity-aware risk scoring, ICD-10 pattern detection, and ROI-ranked campaign generation. The TypeScript layer handles auth, rate limiting, and UI concerns. The triage route proxies to Python when available and falls back to direct Claude if not.
 
 ### Mock Data as First-Class
-`src/lib/mockData.ts` has 50+ realistic members with real CPT/ICD-10 codes. This means the intelligence is real — the risk scoring engine runs on actual medical data structures, the claims patterns are clinically accurate.
+`src/lib/mockData.ts` has 50+ realistic members with real CPT/ICD-10 codes. The Python seeder (`src/backend/database/seeder.py`) generates 100 members + 500+ claims for Supabase. The intelligence layers run on actual medical data structures either way.
 
 ### Lazy Supabase Initialization
-Supabase client uses a Proxy to defer initialization until first use. This allows the app to run in mock-data mode without environment variables set. The audit log also writes to an in-memory buffer as fallback.
+Both TypeScript and Python Supabase clients use lazy init with in-memory fallback. This allows the entire platform to run without any environment variables set (useful for demos). The audit log writes to in-memory buffer as fallback.
 
 ### Extended Thinking for Triage
-The triage API uses `thinking: { type: 'enabled', budget_tokens: 800 }`. This is important because clinical triage requires genuine multi-step reasoning (considering context, weighing red flags, evaluating risk factors). The thinking text is included in the response for transparency.
+Both the TypeScript triage route and the Python LangGraph triage agent use `thinking: { type: 'enabled', budget_tokens: 800 }`. Clinical triage requires genuine multi-step reasoning. The thinking text is returned to the frontend for transparency.
 
 ### Rate Limiting Architecture
-Currently in-memory (Map). The structure is identical to Redis — just swap `store.get/set` for `redis.get/set`. Rate limits: triage 100/hr per IP + 50/hr per member, chat 20/hr per member, preventive 10/hr per member.
+TypeScript layer: in-memory Map (swap for Redis by changing `store.get/set`). Limits: triage 100/hr per IP + 50/hr per member, chat 20/hr, preventive 10/hr. Python layer: FastAPI endpoint validation + input guardrails serve as the second defense layer.
 
 ## Safety Considerations
 
@@ -49,10 +72,27 @@ Currently in-memory (Map). The structure is identical to Redis — just swap `st
 
 2. **Redis for rate limiting** — Replace in-memory Map in `rateLimiter.ts` with Upstash Redis.
 
-3. **Supabase for persistence** — Chat history and triage outcomes should be written to DB. The schema is complete in `schema.sql`.
+3. **Supabase for persistence** — Schema in `schema.sql`. Python queries layer (`src/backend/database/queries.py`) is fully wired — just add `SUPABASE_URL` + `SUPABASE_KEY`. Run seeder once: `PYTHONPATH=. python -m src.backend.database.seeder`.
 
 4. **Embeddings** — `src/lib/embedding.ts` has the pgvector integration scaffolded. In production, replace `generateEmbedding()` with an OpenAI/Cohere embeddings API call.
 
 5. **Encryption key rotation** — `FIELD_ENCRYPTION_KEY` should be rotated periodically. Implement key versioning in `encryption.ts`.
 
 6. **Monitoring** — Add Datadog/Sentry for error tracking. The audit log structure is designed to export to SIEM for HIPAA audit requirements.
+
+7. **Deploy Python backend** — Run alongside Next.js on Railway/Render, or as a Vercel Python serverless function. Set `PYTHON_BACKEND_URL` in Next.js environment to activate the LangGraph agent path.
+
+## Running Locally
+
+```bash
+# Frontend (Next.js)
+npm install && npm run dev
+
+# Python backend
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+uvicorn src.backend.api.server:app --port 8000 --reload
+
+# Tests (no API key needed)
+PYTHONPATH=. python src/backend/test_agents.py --quick
+```
