@@ -24,6 +24,30 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// Python backend URL — set PYTHON_BACKEND_URL in .env to enable
+const PYTHON_BACKEND_URL = process.env.PYTHON_BACKEND_URL || '';
+
+async function callPythonBackend(
+  symptoms: string,
+  severity: string,
+  memberId: string,
+): Promise<Record<string, unknown> | null> {
+  if (!PYTHON_BACKEND_URL) return null;
+  try {
+    const res = await fetch(`${PYTHON_BACKEND_URL}/api/backend/triage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ symptoms, severity, member_id: memberId }),
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    // Python backend unavailable — fall through to direct Claude call
+    return null;
+  }
+}
+
 // Care setting cost benchmarks (national averages)
 const CARE_COST_MAP: Record<string, { cost: number; label: string; timeToSee: string }> = {
   emergency:    { cost: 2800, label: 'Emergency Room',        timeToSee: 'Immediately' },
@@ -142,6 +166,40 @@ CRITICAL RULES:
 - When in doubt about emergency symptoms, recommend emergency
 - Always consider this patient's specific conditions (a diabetic with foot symptoms ≠ healthy person with foot pain)
 - Do not recommend self-care for symptoms that could indicate serious conditions in high-risk patients`;
+
+    // ── Try Python backend first (LangGraph agent with richer context) ──────
+    const pythonResult = await callPythonBackend(
+      symptomCheck.sanitized || symptoms,
+      body.severity || 'medium',
+      memberId,
+    );
+    if (pythonResult && !pythonResult.error) {
+      const rec = String(pythonResult.recommendation || 'pcp');
+      const careInfo = CARE_COST_MAP[rec] || CARE_COST_MAP.pcp;
+      return NextResponse.json({
+        success: true,
+        correlationId,
+        source: 'python_backend',
+        recommendation: {
+          careLevel: rec,
+          label: careInfo.label,
+          confidence: Number(pythonResult.confidence ?? 0.75) * 100,
+          timeToSee: careInfo.timeToSee,
+          estimatedCost: careInfo.cost,
+        },
+        clinicalReasoning: pythonResult.reasoning,
+        reasoning: {
+          thinkingProcess: pythonResult.thinking || '',
+          redFlags: pythonResult.red_flags || [],
+          memberContextUsed: 'Python LangGraph agent with full claims + history context',
+          immediateActions: [],
+          followUpRecommendations: [],
+        },
+        costComparison: pythonResult.cost_analysis || {},
+        riskScore: pythonResult.risk_score || null,
+        triageHistory: pythonResult.triage_history || [],
+      });
+    }
 
     // ── Claude API call with extended thinking ─────────────────────────────
     if (!process.env.ANTHROPIC_API_KEY) {

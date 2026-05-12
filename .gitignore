@@ -1,3 +1,11 @@
+# Python
+venv/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
 # Dependencies
 node_modules/
 .npm
