@@ -20,6 +20,7 @@ interface KBMatch {
   category: string;
   decision: string;
   confidence: number;
+  reasoning: string;
   sources: KBSource[];
 }
 
@@ -264,6 +265,16 @@ function KBMatchCard({ match }: { match: KBMatch }) {
         </div>
       </div>
 
+      {/* Why / clinical reasoning from KB rule */}
+      {match.reasoning && (
+        <div className="mb-4">
+          <p className={`text-xs font-semibold uppercase tracking-wide mb-1.5 ${style.text} opacity-50`}>
+            Why
+          </p>
+          <p className={`text-sm leading-relaxed ${style.text} opacity-80`}>{match.reasoning}</p>
+        </div>
+      )}
+
       {/* Sources */}
       {match.sources.length > 0 && (
         <div>
@@ -294,6 +305,102 @@ function KBMatchCard({ match }: { match: KBMatch }) {
           <p className="text-white text-xs font-bold uppercase tracking-widest animate-pulse">
             ⚠ This is a medical emergency — call 911 now
           </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Results Panel ────────────────────────────────────────────────
+
+function ResultsPanel({ result, careLevel }: { result: TriageResult; careLevel: CareLevel }) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  return (
+    <div className="space-y-4">
+      {/* 1. KB matched rule — decision FIRST */}
+      {result.kbMatch && <KBMatchCard match={result.kbMatch} />}
+
+      {/* 2. Recommendation badge */}
+      <div className={`rounded-xl p-6 border-2 ${CARE_COLORS[careLevel]}`}>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">{CARE_ICONS[careLevel]}</span>
+            <div>
+              <p className="text-2xl font-bold">{result.recommendation.label}</p>
+              <p className="text-xs opacity-70 mt-0.5">{result.recommendation.timeToSee}</p>
+            </div>
+          </div>
+          <div className="text-right flex-shrink-0">
+            <p className="text-3xl font-bold">{result.recommendation.confidence}%</p>
+            <p className="text-xs opacity-60">confidence</p>
+          </div>
+        </div>
+
+        {/* Collapsible details */}
+        <button
+          onClick={() => setDetailsOpen(v => !v)}
+          className="mt-4 flex items-center gap-1.5 text-xs font-semibold opacity-60 hover:opacity-100 transition-opacity"
+        >
+          <Info size={12} />
+          {detailsOpen ? 'Hide Details' : 'Show Details'}
+        </button>
+        {detailsOpen && result.clinicalReasoning && (
+          <p className="text-sm leading-relaxed mt-3 opacity-80">{String(result.clinicalReasoning)}</p>
+        )}
+      </div>
+
+      {/* 3. Red flags */}
+      {result.reasoning.redFlags.length > 0 && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="font-bold text-red-900 text-sm mb-3 flex items-center gap-2">
+            <AlertTriangle size={15} />Red Flags
+          </p>
+          {result.reasoning.redFlags.map((f, i) => (
+            <p key={i} className="text-sm text-red-700 mb-1.5">• {f}</p>
+          ))}
+        </div>
+      )}
+
+      {/* 4. Cost comparison */}
+      <div className="bg-white rounded-lg border border-gray-100 p-4">
+        <p className="font-bold text-gray-900 text-sm mb-3 flex items-center gap-2">
+          <DollarSign size={15} className="text-[#00A896]" />Cost Breakdown
+        </p>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between p-3 bg-[#e6f7f5] rounded-lg">
+            <span className="font-semibold text-[#00A896]">✓ Recommended</span>
+            <span className="font-bold text-[#00A896]">
+              ${result.costComparison.recommended.estimatedCost.toLocaleString()}
+            </span>
+          </div>
+          {result.costComparison.alternatives.map((alt, i) => (
+            <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg text-sm">
+              <span className="text-gray-600">{alt.label}</span>
+              <span className="font-semibold text-gray-700">${alt.estimatedCost.toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+        {result.costComparison.potentialSavings > 0 && (
+          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-xs font-bold text-green-700">
+              Potential Savings: ${result.costComparison.potentialSavings.toLocaleString()}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* 5. Next steps */}
+      {result.reasoning.immediateActions.length > 0 && (
+        <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <p className="font-bold text-gray-900 text-sm mb-3 flex items-center gap-2">
+            <CheckCircle size={15} className="text-[#00A896]" />Next Steps
+          </p>
+          {result.reasoning.immediateActions.map((a, i) => (
+            <p key={i} className="text-sm text-gray-700 mb-2">
+              <span className="font-bold text-[#00A896]">{i + 1}.</span> {a}
+            </p>
+          ))}
         </div>
       )}
     </div>
@@ -367,80 +474,7 @@ function TriageSection() {
 
         {/* Results */}
         {result && careLevel && (
-          <div className="space-y-4">
-            {/* Recommendation badge */}
-            <div className={`rounded-xl p-6 border-2 ${CARE_COLORS[careLevel]}`}>
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-3xl">{CARE_ICONS[careLevel]}</span>
-                    <div>
-                      <p className="text-2xl font-bold">{result.recommendation.label}</p>
-                      <p className="text-xs opacity-70 mt-0.5">{result.recommendation.timeToSee}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-3xl font-bold">{result.recommendation.confidence}%</p>
-                  <p className="text-xs opacity-60">confidence</p>
-                </div>
-              </div>
-              <p className="text-sm leading-relaxed mt-3 text-gray-800">{result.clinicalReasoning}</p>
-            </div>
-
-            {/* KB matched rule */}
-            {result.kbMatch && <KBMatchCard match={result.kbMatch} />}
-
-            {/* Red flags */}
-            {result.reasoning.redFlags.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="font-bold text-red-900 text-sm mb-3 flex items-center gap-2">
-                  <AlertTriangle size={15} />Red Flags
-                </p>
-                {result.reasoning.redFlags.map((f, i) => (
-                  <p key={i} className="text-sm text-red-700 mb-1.5">• {f}</p>
-                ))}
-              </div>
-            )}
-
-            {/* Cost comparison */}
-            <div className="bg-white rounded-lg border border-gray-100 p-4">
-              <p className="font-bold text-gray-900 text-sm mb-3 flex items-center gap-2">
-                <DollarSign size={15} className="text-[#00A896]" />Cost Breakdown
-              </p>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between p-3 bg-[#e6f7f5] rounded-lg">
-                  <span className="font-semibold text-[#00A896]">✓ Recommended</span>
-                  <span className="font-bold text-[#00A896]">${result.costComparison.recommended.estimatedCost.toLocaleString()}</span>
-                </div>
-                {result.costComparison.alternatives.map((alt, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg text-sm">
-                    <span className="text-gray-600">{alt.label}</span>
-                    <span className="font-semibold text-gray-700">${alt.estimatedCost.toLocaleString()}</span>
-                  </div>
-                ))}
-              </div>
-              {result.costComparison.potentialSavings > 0 && (
-                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-xs font-bold text-green-700">Potential Savings: ${result.costComparison.potentialSavings.toLocaleString()}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Actions */}
-            {result.reasoning.immediateActions.length > 0 && (
-              <div className="bg-white rounded-lg border border-gray-100 p-4">
-                <p className="font-bold text-gray-900 text-sm mb-3 flex items-center gap-2">
-                  <CheckCircle size={15} className="text-[#00A896]" />Next Steps
-                </p>
-                {result.reasoning.immediateActions.map((a, i) => (
-                  <p key={i} className="text-sm text-gray-700 mb-2">
-                    <span className="font-bold text-[#00A896]">{i+1}.</span> {a}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
+          <ResultsPanel result={result} careLevel={careLevel} />
         )}
       </div>
     </div>

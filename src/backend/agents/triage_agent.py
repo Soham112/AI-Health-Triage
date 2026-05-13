@@ -167,6 +167,7 @@ def _search_kb_node(state: TriageState) -> TriageState:
             "category": top["category"],
             "decision": top["decision"],
             "confidence": top["confidence"],
+            "reasoning": top.get("reasoning", ""),
             "sources": top.get("sources", []),
         }
         logger.info(

@@ -1,0 +1,402 @@
+[
+  {
+    "id": "TC_001",
+    "symptom": "sudden face drooping facial numbness weakness on one side of face",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_STROKE_001",
+    "category": "emergency",
+    "notes": "Unilateral facial droop — stroke warning sign"
+  },
+  {
+    "id": "TC_002",
+    "symptom": "sudden arm or leg weakness numbness especially on one side of body",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_STROKE_002",
+    "category": "emergency",
+    "notes": "Sudden unilateral limb weakness/numbness — stroke"
+  },
+  {
+    "id": "TC_003",
+    "symptom": "sudden confusion trouble speaking difficulty understanding speech",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_STROKE_003",
+    "category": "emergency",
+    "notes": "Aphasia or dysarthria — stroke warning"
+  },
+  {
+    "id": "TC_004",
+    "symptom": "sudden trouble seeing in one or both eyes, vision loss",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_STROKE_004",
+    "category": "emergency",
+    "notes": "Sudden visual disturbance — stroke or TIA"
+  },
+  {
+    "id": "TC_005",
+    "symptom": "sudden trouble walking dizziness loss of balance loss of coordination",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_STROKE_005",
+    "category": "emergency",
+    "notes": "Acute ataxia and balance loss — posterior stroke"
+  },
+  {
+    "id": "TC_006",
+    "symptom": "sudden severe headache with no known cause thunderclap",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_STROKE_006",
+    "category": "emergency",
+    "notes": "Thunderclap headache — subarachnoid hemorrhage"
+  },
+  {
+    "id": "TC_007",
+    "symptom": "severe abdominal pain after trauma accident or injury to abdomen",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_ABDOMINAL_001",
+    "category": "emergency",
+    "notes": "Abdominal trauma — potential internal bleeding"
+  },
+  {
+    "id": "TC_008",
+    "symptom": "severe abdominal pain with chest pressure or chest pain",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_ABDOMINAL_002",
+    "category": "emergency",
+    "notes": "Abdominal pain + chest pressure — aortic dissection"
+  },
+  {
+    "id": "TC_009",
+    "symptom": "abdominal pain with black tarry stool bloody stool vomiting blood",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_ABDOMINAL_003",
+    "category": "emergency",
+    "notes": "GI bleed signs — hematemesis or melena"
+  },
+  {
+    "id": "TC_010",
+    "symptom": "abdominal pain with swollen and tender abdomen, distension",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_ABDOMINAL_004",
+    "category": "emergency",
+    "notes": "Tender distended abdomen — obstruction or peritonitis"
+  },
+  {
+    "id": "TC_011",
+    "symptom": "abdominal pain with high fever or persistent vomiting for hours",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_ABDOMINAL_005",
+    "category": "emergency",
+    "notes": "Fever + abdominal pain — possible peritonitis or abscess"
+  },
+  {
+    "id": "TC_012",
+    "symptom": "chest pain or upper abdominal pressure lasting two minutes or more",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_CHEST_001",
+    "category": "emergency",
+    "notes": "Sustained chest pressure ≥2 min — ACS"
+  },
+  {
+    "id": "TC_013",
+    "symptom": "chest pain with nausea sweating dizziness or shortness of breath",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_CHEST_002",
+    "category": "emergency",
+    "notes": "Chest pain + diaphoresis — ACS equivalents"
+  },
+  {
+    "id": "TC_014",
+    "symptom": "difficulty breathing or shortness of breath at rest, severe dyspnea",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_BREATHING_001",
+    "category": "emergency",
+    "notes": "Respiratory distress — needs immediate evaluation"
+  },
+  {
+    "id": "TC_015",
+    "symptom": "fainting sudden dizziness sudden weakness difficulty waking up",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_NEURO_001",
+    "category": "emergency",
+    "notes": "Syncope or altered consciousness — cardiac or neuro"
+  },
+  {
+    "id": "TC_016",
+    "symptom": "difficult or painful breathing with chest pain or chest tightness",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_CLOT_001",
+    "category": "emergency",
+    "notes": "Pleuritic chest pain + dyspnea — possible PE"
+  },
+  {
+    "id": "TC_017",
+    "symptom": "coughing bloody sputum with fast heartbeat or lightheadedness hemoptysis",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_CLOT_002",
+    "category": "emergency",
+    "notes": "Hemoptysis + tachycardia — PE presentation"
+  },
+  {
+    "id": "TC_018",
+    "symptom": "arm or leg swelling redness warmth or pain suggestive of DVT without breathing problems",
+    "expected_decision": "GO_TO_URGENT_CARE",
+    "expected_kb_entry_id": "URGENT_CLOT_003",
+    "category": "urgent",
+    "notes": "Isolated limb DVT signs without systemic compromise"
+  },
+  {
+    "id": "TC_019",
+    "symptom": "known infection getting worse with confusion shortness of breath or high fever sepsis",
+    "expected_decision": "GO_TO_ER",
+    "expected_kb_entry_id": "EMERGENCY_SEPSIS_001",
+    "category": "emergency",
+    "notes": "Sepsis criteria with worsening infection"
+  },
+  {
+    "id": "TC_020",
+    "symptom": "allergic reaction with throat face lip tongue swelling wheezing breathing difficulty anaphylaxis",
+    "expected_decision": "CALL_911",
+    "expected_kb_entry_id": "EMERGENCY_ANAPHYLAXIS_001",
+    "category": "emergency",
+    "notes": "Anaphylaxis with airway compromise"
+  },
+  {
+    "id": "TC_021",
+    "symptom": "Medicare service has national coverage determination NCD policy",
+    "expected_decision": "CHECK_NCD",
+    "expected_kb_entry_id": "INSURANCE_CMS_NCD_001",
+    "category": "insurance",
+    "notes": "NCD coverage review"
+  },
+  {
+    "id": "TC_022",
+    "symptom": "Medicare service no applicable NCD but governed by MAC local coverage policy LCD",
+    "expected_decision": "CHECK_LCD",
+    "expected_kb_entry_id": "INSURANCE_CMS_LCD_002",
+    "category": "insurance",
+    "notes": "LCD / MAC policy check"
+  },
+  {
+    "id": "TC_023",
+    "symptom": "Medicare item covered only under coverage with evidence development approved study",
+    "expected_decision": "COVERED_ONLY_IN_APPROVED_STUDY",
+    "expected_kb_entry_id": "INSURANCE_CMS_CED_003",
+    "category": "insurance",
+    "notes": "CED — requires approved clinical study"
+  },
+  {
+    "id": "TC_024",
+    "symptom": "hospital outpatient department blepharoplasty blepharoptosis repair or brow ptosis surgery prior authorization",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_004",
+    "category": "insurance",
+    "notes": "Prior auth for eyelid/brow procedures"
+  },
+  {
+    "id": "TC_025",
+    "symptom": "hospital outpatient department botulinum toxin injections prior authorization needed",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_005",
+    "category": "insurance",
+    "notes": "Prior auth for botulinum toxin"
+  },
+  {
+    "id": "TC_026",
+    "symptom": "hospital outpatient department panniculectomy prior authorization required",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_006",
+    "category": "insurance",
+    "notes": "Prior auth for panniculectomy"
+  },
+  {
+    "id": "TC_027",
+    "symptom": "hospital outpatient department rhinoplasty nose surgery prior authorization",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_007",
+    "category": "insurance",
+    "notes": "Prior auth for rhinoplasty"
+  },
+  {
+    "id": "TC_028",
+    "symptom": "hospital outpatient department vein ablation varicose vein procedure prior auth",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_008",
+    "category": "insurance",
+    "notes": "Prior auth for vein ablation"
+  },
+  {
+    "id": "TC_029",
+    "symptom": "hospital outpatient department implanted spinal neurostimulator prior authorization",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_009",
+    "category": "insurance",
+    "notes": "Prior auth for spinal neurostimulator"
+  },
+  {
+    "id": "TC_030",
+    "symptom": "hospital outpatient department cervical fusion with disc removal spine prior auth",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_010",
+    "category": "insurance",
+    "notes": "Prior auth for cervical fusion"
+  },
+  {
+    "id": "TC_031",
+    "symptom": "hospital outpatient department facet joint interventions injection prior authorization",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_OPD_PA_011",
+    "category": "insurance",
+    "notes": "Prior auth for facet joint injections"
+  },
+  {
+    "id": "TC_032",
+    "symptom": "Medicare home health agency pre-claim review under Review Choice Demonstration",
+    "expected_decision": "PRE_CLAIM_REVIEW_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_HOME_HEALTH_012",
+    "category": "insurance",
+    "notes": "Home health pre-claim review (RCD)"
+  },
+  {
+    "id": "TC_033",
+    "symptom": "repetitive scheduled non-emergent ambulance transport under Medicare prior auth",
+    "expected_decision": "PRIOR_AUTH_REQUIRED",
+    "expected_kb_entry_id": "INSURANCE_AMBULANCE_013",
+    "category": "insurance",
+    "notes": "Prior auth for non-emergent ambulance"
+  },
+  {
+    "id": "TC_034",
+    "symptom": "Medicare preventive colorectal cancer screening colonoscopy stool-based covered",
+    "expected_decision": "PREVENTIVE_COVERED_NO_DEDUCTIBLE_OR_COINSURANCE",
+    "expected_kb_entry_id": "INSURANCE_CRC_014",
+    "category": "insurance",
+    "notes": "ACA preventive colonoscopy — no cost sharing"
+  },
+  {
+    "id": "TC_035",
+    "symptom": "Medicare preventive and screening services coverage benefits",
+    "expected_decision": "CHECK_PREVENTIVE_COVERAGE",
+    "expected_kb_entry_id": "INSURANCE_PREVENTIVE_015",
+    "category": "insurance",
+    "notes": "General Medicare preventive coverage check"
+  },
+  {
+    "id": "TC_036",
+    "symptom": "average risk adults age 45 colorectal cancer screening recommended",
+    "expected_decision": "GET_SCREENING",
+    "expected_kb_entry_id": "SCREENING_CRC_001",
+    "category": "screening",
+    "notes": "USPSTF CRC screening age 45-75 average risk"
+  },
+  {
+    "id": "TC_037",
+    "symptom": "adult age 76 to 85 years considering colorectal cancer screening options",
+    "expected_decision": "SCHEDULE_PCP",
+    "expected_kb_entry_id": "SCREENING_CRC_002",
+    "category": "screening",
+    "notes": "CRC screening age 76-85 — individualized decision"
+  },
+  {
+    "id": "TC_038",
+    "symptom": "people at increased risk for colorectal cancer family history Lynch syndrome",
+    "expected_decision": "SCHEDULE_PCP",
+    "expected_kb_entry_id": "SCREENING_CRC_003",
+    "category": "screening",
+    "notes": "High-risk CRC — earlier/more frequent screening"
+  },
+  {
+    "id": "TC_039",
+    "symptom": "women age 40 to 74 years at average risk for breast cancer mammogram",
+    "expected_decision": "GET_SCREENING",
+    "expected_kb_entry_id": "SCREENING_BREAST_004",
+    "category": "screening",
+    "notes": "USPSTF mammography age 40-74 average risk"
+  },
+  {
+    "id": "TC_040",
+    "symptom": "women age 75 years or older considering breast cancer screening mammogram",
+    "expected_decision": "SCHEDULE_PCP",
+    "expected_kb_entry_id": "SCREENING_BREAST_005",
+    "category": "screening",
+    "notes": "Breast cancer screening age 75+ — individualized"
+  },
+  {
+    "id": "TC_041",
+    "symptom": "women age 21 to 29 with cervix Pap smear cervical screening every three years",
+    "expected_decision": "GET_SCREENING",
+    "expected_kb_entry_id": "SCREENING_CERVICAL_006",
+    "category": "screening",
+    "notes": "Pap smear every 3 years age 21-29"
+  },
+  {
+    "id": "TC_042",
+    "symptom": "women age 30 to 65 years with cervix Pap smear HPV co-test cervical screening",
+    "expected_decision": "GET_SCREENING",
+    "expected_kb_entry_id": "SCREENING_CERVICAL_007",
+    "category": "screening",
+    "notes": "Pap + HPV co-test every 5 years age 30-65"
+  },
+  {
+    "id": "TC_043",
+    "symptom": "adults age 19 years or older annual influenza vaccination flu shot",
+    "expected_decision": "GET_SCREENING",
+    "expected_kb_entry_id": "SCREENING_VACCINE_008",
+    "category": "screening",
+    "notes": "Annual flu vaccine recommendation"
+  },
+  {
+    "id": "TC_044",
+    "symptom": "adults age 50 years or older recombinant zoster vaccine shingles Shingrix",
+    "expected_decision": "GET_SCREENING",
+    "expected_kb_entry_id": "SCREENING_VACCINE_009",
+    "category": "screening",
+    "notes": "Zoster vaccine at age 50+"
+  },
+  {
+    "id": "TC_045",
+    "symptom": "adults age 50 years or older pneumococcal vaccination status review",
+    "expected_decision": "SCHEDULE_PCP",
+    "expected_kb_entry_id": "SCREENING_VACCINE_010",
+    "category": "screening",
+    "notes": "Pneumococcal vaccine review at age 50+"
+  },
+  {
+    "id": "TC_046",
+    "symptom": "metformin use with eGFR below 30 mL/min kidney function contraindication",
+    "expected_decision": "DRUG_CONTRAINDICATION",
+    "expected_kb_entry_id": "DRUG_METFORMIN_001",
+    "category": "drug",
+    "notes": "Metformin contraindicated — eGFR <30"
+  },
+  {
+    "id": "TC_047",
+    "symptom": "metformin use in hepatic impairment or hepatic failure liver disease",
+    "expected_decision": "AVOID_AND_CONTACT_PRESCRIBER",
+    "expected_kb_entry_id": "DRUG_METFORMIN_002",
+    "category": "drug",
+    "notes": "Metformin contraindicated in liver failure"
+  },
+  {
+    "id": "TC_048",
+    "symptom": "metformin use with iodinated contrast eGFR 30 to 60 hepatic impairment or alcohol",
+    "expected_decision": "HOLD_AND_RECHECK_RENAL_FUNCTION",
+    "expected_kb_entry_id": "DRUG_METFORMIN_003",
+    "category": "drug",
+    "notes": "Hold metformin with contrast + borderline eGFR"
+  },
+  {
+    "id": "TC_049",
+    "symptom": "metformin use with excessive alcohol intake or binge drinking",
+    "expected_decision": "AVOID_INTERACTION_AND_CONTACT_PRESCRIBER",
+    "expected_kb_entry_id": "DRUG_METFORMIN_004",
+    "category": "drug",
+    "notes": "Metformin + alcohol — lactic acidosis risk"
+  },
+  {
+    "id": "TC_050",
+    "symptom": "metformin use during acute hypoxia shock sepsis circulatory failure myocardial infarction",
+    "expected_decision": "HOLD_AND_SEEK_URGENT_MEDICAL_ADVICE",
+    "expected_kb_entry_id": "DRUG_METFORMIN_005",
+    "category": "drug",
+    "notes": "Metformin in hemodynamic instability — immediate hold"
+  }
+]
