@@ -224,6 +224,21 @@ const KB_DECISION_STYLE: Record<string, { bg: string; border: string; text: stri
 };
 const KB_DEFAULT_STYLE = { bg: 'bg-gray-50', border: 'border-gray-300', text: 'text-gray-900', badge: 'bg-gray-600 text-white', label: '' };
 
+const KB_ACTION_BUTTON: Record<string, { label: string; href: string; emergency?: boolean }> = {
+  CALL_911:                            { label: 'Call 911',            href: 'tel:911',  emergency: true },
+  GO_TO_ER:                            { label: 'Find Nearest ER',     href: 'https://www.google.com/maps/search/emergency+room+near+me', emergency: true },
+  GO_TO_URGENT_CARE:                   { label: 'Find Urgent Care',    href: 'https://www.google.com/maps/search/urgent+care+near+me' },
+  GET_SCREENING:                       { label: 'Schedule Screening',  href: '#' },
+  SCHEDULE_PCP:                        { label: 'Schedule with Doctor',href: '#' },
+  PRIOR_AUTH_REQUIRED:                 { label: 'Start Prior Auth',    href: '#' },
+  PRE_CLAIM_REVIEW_REQUIRED:           { label: 'Request Review',      href: '#' },
+  DRUG_CONTRAINDICATION:               { label: 'Contact Prescriber',  href: '#' },
+  AVOID_AND_CONTACT_PRESCRIBER:        { label: 'Contact Prescriber',  href: '#' },
+  HOLD_AND_RECHECK_RENAL_FUNCTION:     { label: 'Contact Prescriber',  href: '#' },
+  AVOID_INTERACTION_AND_CONTACT_PRESCRIBER: { label: 'Contact Prescriber', href: '#' },
+  HOLD_AND_SEEK_URGENT_MEDICAL_ADVICE: { label: 'Seek Medical Advice', href: '#', emergency: true },
+};
+
 const KB_CATEGORY_LABEL: Record<string, string> = {
   emergency: 'EMERGENCY GUIDELINE',
   urgent:    'URGENT CARE GUIDELINE',
@@ -311,15 +326,104 @@ function KBMatchCard({ match }: { match: KBMatch }) {
   );
 }
 
+// ─── KB Decision Card (high-confidence shortcut) ─────────────────
+
+function KBDecisionCard({ match }: { match: KBMatch }) {
+  const style = KB_DECISION_STYLE[match.decision] ?? KB_DEFAULT_STYLE;
+  const label = style.label || match.decision.replace(/_/g, ' ');
+  const action = KB_ACTION_BUTTON[match.decision];
+
+  return (
+    <div className={`rounded-xl border-2 p-6 space-y-4 ${style.bg} ${style.border}`}>
+      {/* Decision badge */}
+      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold tracking-wide ${style.badge}`}>
+        {style.bg.includes('red') ? '🚨' : style.bg.includes('orange') ? '⚡' : '✓'} {label}
+      </div>
+
+      {/* One-sentence reason */}
+      {match.reasoning && (
+        <p className={`text-sm leading-relaxed ${style.text}`}>{match.reasoning}</p>
+      )}
+
+      {/* Action button */}
+      {action && (
+        <a
+          href={action.href}
+          target={action.href.startsWith('tel:') || action.href === '#' ? '_self' : '_blank'}
+          rel="noopener noreferrer"
+          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm transition-opacity hover:opacity-90 ${
+            action.emergency ? 'bg-red-600 text-white' : style.badge
+          }`}
+        >
+          {action.label} <ArrowRight size={14} />
+        </a>
+      )}
+
+      {/* Source — just one, small */}
+      {match.sources.length > 0 && (
+        <div className="pt-2 border-t border-current border-opacity-10">
+          <a
+            href={match.sources[0].url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center gap-1 text-xs opacity-50 hover:opacity-80 transition-opacity ${style.text}`}
+          >
+            <ExternalLink size={10} className="flex-shrink-0" />
+            {match.sources[0].title}
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Chat helpers ─────────────────────────────────────────────────
+
+type ChatSegment = { type: 'text'; content: string } | { type: 'button'; label: string };
+
+function parseChatSegments(raw: string): ChatSegment[] {
+  const text = raw
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/^#{1,3}\s*/gm, '')
+    .trim();
+
+  const segments: ChatSegment[] = [];
+  const parts = text.split(/(\[[^\]]+\])/g);
+  for (const part of parts) {
+    if (/^\[[^\]]+\]$/.test(part)) {
+      segments.push({ type: 'button', label: part.slice(1, -1) });
+    } else if (part.trim()) {
+      segments.push({ type: 'text', content: part });
+    }
+  }
+  return segments;
+}
+
+function buttonHref(label: string): string {
+  const l = label.toLowerCase();
+  if (l.includes('911')) return 'tel:911';
+  if (l.includes('988')) return 'tel:988';
+  if (l.includes('find er') || l.includes('nearest er')) return 'https://www.google.com/maps/search/emergency+room+near+me';
+  if (l.includes('urgent care')) return 'https://www.google.com/maps/search/urgent+care+near+me';
+  return '#';
+}
+
 // ─── Results Panel ────────────────────────────────────────────────
 
 function ResultsPanel({ result, careLevel }: { result: TriageResult; careLevel: CareLevel }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const kb = result.kbMatch;
+
+  // High-confidence KB match: show only the decisive card — no Claude ramble
+  if (kb && kb.confidence > 0.95) {
+    return <KBDecisionCard match={kb} />;
+  }
 
   return (
     <div className="space-y-4">
       {/* 1. KB matched rule — decision FIRST */}
-      {result.kbMatch && <KBMatchCard match={result.kbMatch} />}
+      {kb && <KBMatchCard match={kb} />}
 
       {/* 2. Recommendation badge */}
       <div className={`rounded-xl p-6 border-2 ${CARE_COLORS[careLevel]}`}>
@@ -612,51 +716,61 @@ function ChatSection() {
             </div>
           )}
 
-          {messages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-sm space-y-1.5 ${msg.role === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
-                {/* Bubble */}
-                <div className={`rounded-2xl px-4 py-3 ${
-                  msg.role === 'user'
-                    ? 'bg-[#00A896] text-white rounded-br-sm'
-                    : msg.error
-                    ? 'bg-red-50 text-red-700 border border-red-200 rounded-bl-sm'
-                    : 'bg-gray-100 text-gray-900 rounded-bl-sm'
-                }`}>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
-                </div>
+          {messages.map((msg, i) => {
+            const isUser = msg.role === 'user';
+            const segments = !isUser && !msg.error ? parseChatSegments(msg.content) : null;
 
-                {/* Meta row */}
-                <div className={`flex items-center gap-2 px-1 flex-wrap ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <span className="text-xs text-gray-400">{formatTime(msg.timestamp)}</span>
-
-                  {msg.role === 'assistant' && msg.confidence !== undefined && !msg.error && (
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
-                      msg.confidence >= 85 ? 'bg-green-50 text-green-700 border-green-200'
-                      : msg.confidence >= 70 ? 'bg-blue-50 text-blue-700 border-blue-200'
-                      : 'bg-yellow-50 text-yellow-700 border-yellow-200'
-                    }`}>
-                      {msg.confidence}% confident
-                    </span>
-                  )}
-
-                  {msg.responseTimeMs !== undefined && (
-                    <span className="text-xs text-gray-300">
-                      {(msg.responseTimeMs / 1000).toFixed(1)}s
-                    </span>
-                  )}
-                </div>
-
-                {/* Disclaimer */}
-                {msg.disclaimer && (
-                  <div className="flex items-start gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 max-w-sm">
-                    <Info size={12} className="text-blue-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-blue-700 leading-relaxed">{msg.disclaimer}</p>
+            return (
+              <div key={i} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-sm space-y-1.5 ${isUser ? 'items-end' : 'items-start'} flex flex-col`}>
+                  {/* Bubble */}
+                  <div className={`rounded-2xl px-4 py-3 ${
+                    isUser
+                      ? 'bg-[#00A896] text-white rounded-br-sm'
+                      : msg.error
+                      ? 'bg-red-50 text-red-700 border border-red-200 rounded-bl-sm'
+                      : 'bg-gray-100 text-gray-900 rounded-bl-sm'
+                  }`}>
+                    {segments ? (
+                      <div className="space-y-2">
+                        {segments.map((seg, si) =>
+                          seg.type === 'text' ? (
+                            <p key={si} className="text-sm leading-relaxed whitespace-pre-wrap">{seg.content}</p>
+                          ) : (
+                            <a
+                              key={si}
+                              href={buttonHref(seg.label)}
+                              target={buttonHref(seg.label).startsWith('http') ? '_blank' : '_self'}
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-800 rounded-lg text-xs font-semibold hover:bg-gray-50 transition-colors mr-1"
+                            >
+                              {seg.label} <ArrowRight size={11} />
+                            </a>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                    )}
                   </div>
-                )}
+
+                  {/* Meta row: timestamp + confidence badge */}
+                  <div className={`flex items-center gap-2 px-1 flex-wrap ${isUser ? 'justify-end' : 'justify-start'}`}>
+                    <span className="text-xs text-gray-400">{formatTime(msg.timestamp)}</span>
+                    {!isUser && msg.confidence !== undefined && !msg.error && (
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                        msg.confidence >= 85 ? 'bg-green-50 text-green-700 border-green-200'
+                        : msg.confidence >= 70 ? 'bg-blue-50 text-blue-700 border-blue-200'
+                        : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                      }`}>
+                        {msg.confidence}% confident
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {loading && (
             <div className="flex justify-start">
