@@ -23,7 +23,7 @@ interface TriageResult {
   safetyInfo: { disclaimers: string[]; confidenceScore: number };
 }
 
-interface ChatMessage { role: 'user' | 'assistant'; content: string; timestamp: string; confidence?: number; warnings?: string[] }
+interface ChatMessage { role: 'user' | 'assistant'; content: string; timestamp: string; confidence?: number; warnings?: string[]; disclaimer?: string; responseTimeMs?: number; error?: boolean }
 interface Campaign { title: string; clinicalRationale: string; evidenceBase: string; projectedSavings: number; urgency: string; priority: number; interventionSteps?: string[] }
 interface PreventiveResult {
   campaigns: Campaign[];
@@ -347,6 +347,12 @@ function TriageSection() {
 
 // ─── Chat Section ─────────────────────────────────────────────────
 
+const CHAT_STORAGE_KEY = (memberId: string) => `chat_history_${memberId}`;
+
+function formatTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+
 function ChatSection() {
   const [memberId, setMemberId] = useState('mbr_001');
   const [message, setMessage] = useState('');
@@ -355,7 +361,35 @@ function ChatSection() {
   const [sessionId] = useState(() => `session_${Date.now()}`);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Load persisted history when member changes
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CHAT_STORAGE_KEY(memberId));
+      setMessages(saved ? (JSON.parse(saved) as ChatMessage[]) : []);
+    } catch {
+      setMessages([]);
+    }
+  }, [memberId]);
+
+  // Persist messages on every change
+  useEffect(() => {
+    if (messages.length === 0) return;
+    try {
+      localStorage.setItem(CHAT_STORAGE_KEY(memberId), JSON.stringify(messages.slice(-50)));
+    } catch { /* storage full — silent */ }
+  }, [messages, memberId]);
+
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+
+  function clearChat() {
+    setMessages([]);
+    try { localStorage.removeItem(CHAT_STORAGE_KEY(memberId)); } catch { /* noop */ }
+  }
+
+  function switchMember(id: string) {
+    setMemberId(id);
+    // messages will load from localStorage via the useEffect above
+  }
 
   async function sendMessage() {
     if (!message.trim() || loading) return;
@@ -364,6 +398,7 @@ function ChatSection() {
     setMessages(prev => [...prev, userMsg]);
     setMessage('');
     setLoading(true);
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -371,25 +406,41 @@ function ChatSection() {
         body: JSON.stringify({ memberId, message: text, sessionId }),
       });
       const data = await res.json();
+
+      if (!res.ok) {
+        const errorMsg =
+          res.status === 429 ? (data.error || 'Too many requests. Wait a moment.')
+          : res.status === 400 ? (data.error || 'Please ask a health-related question.')
+          : res.status === 503 ? 'AI service temporarily unavailable.'
+          : (data.error || 'Connection failed. Try again.');
+        setMessages(prev => [...prev, { role: 'assistant', content: errorMsg, timestamp: new Date().toISOString(), error: true }]);
+        return;
+      }
+
+      const disclaimer = data.metadata?.disclaimers?.[0];
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: data.response || data.error || 'Unable to respond',
+        content: data.response || 'Unable to respond',
         timestamp: new Date().toISOString(),
         confidence: data.metadata?.confidenceScore,
         warnings: data.warnings,
+        disclaimer,
+        responseTimeMs: data.metadata?.responseTimeMs,
       }]);
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Network error.', timestamp: new Date().toISOString() }]);
-    } finally { setLoading(false); }
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Connection failed. Try again.', timestamp: new Date().toISOString(), error: true }]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
-      {/* Context */}
+      {/* Sidebar */}
       <div>
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 sticky top-20">
           <h3 className="text-sm font-bold text-gray-800 mb-3">Select Member</h3>
-          <select value={memberId} onChange={e => { setMemberId(e.target.value); setMessages([]); }}
+          <select value={memberId} onChange={e => switchMember(e.target.value)}
             className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm mb-3 focus:outline-none focus:border-[#00A896]">
             {MOCK_MEMBERS.slice(0, 10).map(m => <option key={m.id} value={m.id}>{m.id} (Age {m.age})</option>)}
           </select>
@@ -397,9 +448,26 @@ function ChatSection() {
         </div>
       </div>
 
-      {/* Chat */}
-      <div className="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col" style={{ height: '500px' }}>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      {/* Chat panel */}
+      <div className="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col" style={{ height: '560px' }}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <MessageSquare size={15} className="text-[#00A896]" />
+            <span className="text-sm font-semibold text-gray-800">Health Chat</span>
+            {messages.length > 0 && (
+              <span className="text-xs text-gray-400">{messages.length} message{messages.length !== 1 ? 's' : ''}</span>
+            )}
+          </div>
+          {messages.length > 0 && (
+            <button onClick={clearChat} className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors px-2 py-1 rounded hover:bg-red-50">
+              <X size={12} /> Clear
+            </button>
+          )}
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <MessageSquare size={32} className="text-gray-300 mb-3" />
@@ -407,31 +475,84 @@ function ChatSection() {
               <p className="text-xs text-gray-400 mt-1">Ask about health conditions, medications, or preventive care</p>
             </div>
           )}
+
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-sm rounded-lg px-4 py-3 ${msg.role === 'user' ? 'bg-[#00A896] text-white' : 'bg-gray-100 text-gray-900'}`}>
-                <p className="text-sm">{msg.content}</p>
-                <div className={`text-xs mt-1.5 ${msg.role === 'user' ? 'text-teal-100' : 'text-gray-500'}`}>
-                  {msg.confidence && <span>{msg.confidence}% confident</span>}
+              <div className={`max-w-sm space-y-1.5 ${msg.role === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
+                {/* Bubble */}
+                <div className={`rounded-2xl px-4 py-3 ${
+                  msg.role === 'user'
+                    ? 'bg-[#00A896] text-white rounded-br-sm'
+                    : msg.error
+                    ? 'bg-red-50 text-red-700 border border-red-200 rounded-bl-sm'
+                    : 'bg-gray-100 text-gray-900 rounded-bl-sm'
+                }`}>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                 </div>
+
+                {/* Meta row */}
+                <div className={`flex items-center gap-2 px-1 flex-wrap ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <span className="text-xs text-gray-400">{formatTime(msg.timestamp)}</span>
+
+                  {msg.role === 'assistant' && msg.confidence !== undefined && !msg.error && (
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                      msg.confidence >= 85 ? 'bg-green-50 text-green-700 border-green-200'
+                      : msg.confidence >= 70 ? 'bg-blue-50 text-blue-700 border-blue-200'
+                      : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                    }`}>
+                      {msg.confidence}% confident
+                    </span>
+                  )}
+
+                  {msg.responseTimeMs !== undefined && (
+                    <span className="text-xs text-gray-300">
+                      {(msg.responseTimeMs / 1000).toFixed(1)}s
+                    </span>
+                  )}
+                </div>
+
+                {/* Disclaimer */}
+                {msg.disclaimer && (
+                  <div className="flex items-start gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 max-w-sm">
+                    <Info size={12} className="text-blue-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-blue-700 leading-relaxed">{msg.disclaimer}</p>
+                  </div>
+                )}
               </div>
             </div>
           ))}
-          {loading && <div className="flex justify-start"><div className="bg-gray-100 rounded-lg px-4 py-2 text-sm">Thinking...</div></div>}
+
+          {loading && (
+            <div className="flex justify-start">
+              <div className="bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-2">
+                <Loader2 size={14} className="animate-spin text-[#00A896]" />
+                <span className="text-sm text-gray-500">Thinking...</span>
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Input */}
         <div className="border-t border-gray-100 p-3">
           <div className="flex gap-2">
-            <input value={message} onChange={e => setMessage(e.target.value)}
+            <input
+              value={message}
+              onChange={e => setMessage(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-              placeholder="Your question..."
+              placeholder="Ask about your health..."
+              maxLength={1000}
               className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#00A896]"
             />
-            <button onClick={sendMessage} disabled={loading || !message.trim()}
-              className="px-4 py-2.5 bg-[#00A896] hover:bg-[#008f7f] disabled:opacity-50 text-white rounded-lg">
-              <ArrowRight size={17} />
+            <button
+              onClick={sendMessage}
+              disabled={loading || !message.trim()}
+              className="px-4 py-2.5 bg-[#00A896] hover:bg-[#008f7f] disabled:opacity-50 text-white rounded-lg transition-colors"
+            >
+              {loading ? <Loader2 size={17} className="animate-spin" /> : <ArrowRight size={17} />}
             </button>
           </div>
+          <p className="text-xs text-gray-300 mt-1.5 text-right">{message.length}/1000</p>
         </div>
       </div>
     </div>

@@ -62,10 +62,17 @@ A production-grade healthcare AI platform demonstrating full-stack ownership: in
 - **Clinical reasoning** — explains WHY this care level, not just a label
 
 ### Health Chat
-- **Context-aware** — system prompt includes member's actual conditions and medications
-- **Conversation memory** — maintains session continuity across turns
-- **Confidence scoring** — evaluates response quality before returning
-- **Safety guardrails** — blocks harmful advice, adds evidence-based disclaimers
+Real-time health guidance powered by Claude Haiku (`claude-haiku-4-5-20251001`)
+
+- **Context-aware** — system prompt includes member's actual conditions, medications, and risk tier
+- **Confidence scoring** — Claude self-rates each response 0–100; displayed as a color-coded badge (green ≥85%, blue ≥70%, yellow below)
+- **Conversation persistence** — chat history stored in localStorage per member; survives page refresh
+- **Response time display** — each AI response shows how long Claude took (e.g. "1.2s")
+- **Automatic disclaimers** — contextual disclaimers appended based on response content (medications, diagnoses, emergencies)
+- **Input validation + injection prevention** — chatSafety.ts blocks prompt injection, PII, non-medical requests
+- **Rate limiting** — 30 requests/hour per member IP (separate IP-level and member-level windows)
+- **Console audit logging** — `[CHAT] User: '...'`, `[CHAT] AI confidence: N%`, `[CHAT] Response length: N chars`
+- **Graceful error handling** — distinct messages for network error, rate limit, invalid input, and API failure
 
 ### Preventive Care Intelligence
 - **Claims pattern analysis** — detects ED visit patterns, post-discharge follow-up gaps

@@ -6,6 +6,8 @@ import { logChatMessage, logValidationFailure, writeAuditLog } from '@/lib/audit
 import { checkRateLimit } from '@/lib/rateLimiter';
 import { getMemberById, getClaimsForMember, getTriageHistoryForMember, MOCK_CHAT_HISTORY } from '@/lib/mockData';
 import { generateSecureToken } from '@/lib/encryption';
+import { generateConfidence, stripConfidenceTag, validateInput as chatSafetyValidate } from '@/lib/chatSafety';
+import { logChatMessage as consoleChatLog, logRateLimit, logSafetyBlock } from '@/lib/chatLogging';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -25,20 +27,36 @@ export async function POST(request: NextRequest) {
     }
 
     // ── Rate limiting ──────────────────────────────────────────────────────
-    const memberLimit = checkRateLimit(`chat:member:${memberId}`, 20, 3600);
+    const ipLimit = checkRateLimit(`chat:ip:${ip}`, 30, 3600);
+    if (!ipLimit.allowed) {
+      logRateLimit(memberId, ip);
+      return NextResponse.json(
+        { error: 'Too many requests. Wait a moment before trying again.', retryAfterSeconds: ipLimit.retryAfterSeconds },
+        { status: 429 },
+      );
+    }
+
+    const memberLimit = checkRateLimit(`chat:member:${memberId}`, 30, 3600);
     if (!memberLimit.allowed) {
+      logRateLimit(memberId, ip);
       await logValidationFailure({ userId: memberId, reason: 'rate_limit_exceeded', action: 'rate_limit_exceeded', ipAddress: ip });
       return NextResponse.json(
-        { error: 'Rate limit exceeded. You can send up to 20 messages per hour.', retryAfterSeconds: memberLimit.retryAfterSeconds },
+        { error: 'Rate limit exceeded. You can send up to 30 messages per hour.', retryAfterSeconds: memberLimit.retryAfterSeconds },
         { status: 429 },
       );
     }
 
     // ── Input validation ───────────────────────────────────────────────────
+    const chatSafetyCheck = chatSafetyValidate(message);
+    if (!chatSafetyCheck.valid) {
+      logSafetyBlock(memberId, chatSafetyCheck.error || 'input_rejected');
+      return NextResponse.json({ error: chatSafetyCheck.error || 'Please ask a health-related question.' }, { status: 400 });
+    }
+
     const injectionCheck = detectPromptInjection(message);
     if (!injectionCheck.valid) {
       await logValidationFailure({ userId: memberId, reason: 'injection_detected', action: 'injection_attempt_blocked', ipAddress: ip });
-      return NextResponse.json({ error: 'Invalid input detected', details: injectionCheck.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid input detected. Please ask a health-related question.' }, { status: 400 });
     }
 
     const validation = validateChatMessage(message);
@@ -120,7 +138,9 @@ ABSOLUTE LIMITS:
 - Never prescribe or adjust medication doses
 - Never provide definitive diagnoses
 - Never say "you don't need to see a doctor"
-- Always recommend emergency care for life-threatening symptoms`;
+- Always recommend emergency care for life-threatening symptoms
+
+CONFIDENCE RATING: At the very end of your response, on its own line, write exactly: [CONFIDENCE: N] where N is 0-100 representing your certainty in this health guidance. Use higher scores for well-established guidance (e.g., 90+), moderate scores when the answer depends on factors you cannot assess (70-89), and lower scores when the topic is complex or highly individualized (50-69).`;
 
     // ── Claude API call ────────────────────────────────────────────────────
     if (!process.env.ANTHROPIC_API_KEY) {
@@ -132,25 +152,35 @@ ABSOLUTE LIMITS:
       { role: 'user', content: validation.sanitized || message },
     ];
 
+    const callStart = Date.now();
     const claudeResponse = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 1000,
       system: systemPrompt,
       messages,
     });
+    const responseTimeMs = Date.now() - callStart;
 
-    const responseText = claudeResponse.content[0]?.type === 'text'
+    const rawResponseText = claudeResponse.content[0]?.type === 'text'
       ? claudeResponse.content[0].text
       : '';
 
+    // Extract Claude's self-reported confidence, then strip the tag before guardrails
+    const selfConfidence = generateConfidence(rawResponseText);
+    const responseText = stripConfidenceTag(rawResponseText);
+
     // ── Apply guardrails ───────────────────────────────────────────────────
     const guardrailResult = applyOutputGuardrails(responseText, { isMedicalAdvice: true, memberId });
+    const finalConfidence = selfConfidence !== 70 ? selfConfidence : guardrailResult.confidenceScore;
 
     // ── Update conversation history ────────────────────────────────────────
     conversation.push(
       { role: 'user', content: validation.sanitized || message },
       { role: 'assistant', content: guardrailResult.filteredResponse },
     );
+
+    // ── Console logging ────────────────────────────────────────────────────
+    consoleChatLog(memberId, message, guardrailResult.filteredResponse, finalConfidence, responseTimeMs);
 
     // ── Audit the response ─────────────────────────────────────────────────
     await writeAuditLog({
@@ -159,7 +189,8 @@ ABSOLUTE LIMITS:
       resource: 'chat',
       details: {
         response_length: responseText.length,
-        confidence_score: guardrailResult.confidenceScore,
+        confidence_score: finalConfidence,
+        response_time_ms: responseTimeMs,
         disclaimers_added: guardrailResult.addedDisclaimers.length,
         pii_redactions: guardrailResult.redactionCount,
         guardrail_triggered: !guardrailResult.safe,
@@ -178,18 +209,25 @@ ABSOLUTE LIMITS:
         recentClaimsCount: memberClaims.length,
       },
       metadata: {
-        confidenceScore: guardrailResult.confidenceScore,
+        confidenceScore: finalConfidence,
         disclaimers: guardrailResult.addedDisclaimers,
         conversationTurn: messages.length,
         sessionId: session,
+        responseTimeMs,
       },
       warnings: validation.warnings,
     });
 
   } catch (error) {
     console.error('[Chat API] Error:', error);
+    const isApiError = error instanceof Error && error.message.includes('API');
     return NextResponse.json(
-      { error: 'Internal server error', correlationId },
+      {
+        error: isApiError
+          ? 'AI service temporarily unavailable. Please try again in a moment.'
+          : 'Connection failed. Please try again.',
+        correlationId,
+      },
       { status: 500 },
     );
   }
