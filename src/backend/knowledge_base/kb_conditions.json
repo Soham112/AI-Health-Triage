@@ -1,0 +1,842 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2026-05-13",
+    "description": "Care Partner KB: Condition definitions, lab monitoring, treatment protocols. Plain English for member education.",
+    "sources": ["Mayo Clinic", "ADA Guidelines 2024", "AHA/ACC Guidelines 2023", "JNC8/ACC/AHA 2017 HTN Guidelines", "GOLD 2024 COPD", "ATS/ERS Asthma Guidelines", "KDIGO CKD Guidelines 2024", "FDA Prescribing Information", "NOF Osteoporosis Guidelines", "ATA Thyroid Guidelines"],
+    "total_entries": 15,
+    "medical_review_required": true,
+    "disclaimer": "Educational information only. Never constitutes a diagnosis. Member should discuss with their physician."
+  },
+  "entries": [
+    {
+      "id": "CONDITION_T2DM_001",
+      "condition_name": "Type 2 Diabetes Mellitus",
+      "icd10_code": "E11.9",
+      "plain_english": "Your body has trouble using insulin to control blood sugar levels. Over time, high blood sugar damages blood vessels and nerves throughout the body.",
+      "prevalence": "37.3 million Americans (11.3% of population)",
+      "causes": ["insulin_resistance", "pancreatic_beta_cell_dysfunction", "obesity", "genetics", "physical_inactivity"],
+      "symptoms": ["increased_thirst", "frequent_urination", "unexplained_fatigue", "blurred_vision", "slow_wound_healing", "frequent_infections", "numbness_tingling_feet"],
+      "diagnostic_criteria": {
+        "fasting_glucose": "≥126 mg/dL on 2 occasions",
+        "HbA1c": "≥6.5% on 2 occasions",
+        "random_glucose": "≥200 mg/dL with symptoms",
+        "ogtt_2hr": "≥200 mg/dL",
+        "source": "ADA Standards of Care 2024"
+      },
+      "treatment_options": [
+        {
+          "type": "lifestyle",
+          "details": "Medical Nutrition Therapy + 150 min/week moderate aerobic exercise reduces HbA1c by 0.5–1.0% and can achieve remission in some patients",
+          "source": "ADA Standards of Care 2024, Section 5",
+          "confidence": 0.98
+        },
+        {
+          "type": "first_line_medication",
+          "drug": "Metformin",
+          "typical_dosage": "500mg–2000mg daily (divided doses with meals)",
+          "mechanism": "Reduces hepatic glucose production",
+          "side_effects": ["nausea", "diarrhea", "B12 deficiency (long-term)"],
+          "contraindications": ["eGFR < 30", "IV contrast within 48 hours"],
+          "source": "FDA approved labeling + ADA 2024",
+          "confidence": 0.99
+        },
+        {
+          "type": "add_on_medication",
+          "drug_class": "GLP-1 Receptor Agonists",
+          "examples": ["semaglutide (Ozempic)", "liraglutide (Victoza)", "dulaglutide (Trulicity)"],
+          "benefits": ["HbA1c reduction 1-2%", "weight loss 5-15 lbs", "cardiovascular benefit (LEADER trial)", "renal protection"],
+          "side_effects": ["nausea", "vomiting", "injection site reactions"],
+          "contraindications": ["personal/family history medullary thyroid cancer", "MEN2"],
+          "source": "ADA 2024 + FDA labeling + LEADER trial NEJM 2016",
+          "confidence": 0.97
+        },
+        {
+          "type": "add_on_medication",
+          "drug_class": "SGLT-2 Inhibitors",
+          "examples": ["empagliflozin (Jardiance)", "dapagliflozin (Farxiga)", "canagliflozin (Invokana)"],
+          "benefits": ["HbA1c reduction 0.5-1%", "weight loss", "cardiovascular benefit (EMPA-REG OUTCOME)", "heart failure benefit", "renal protection"],
+          "side_effects": ["genital yeast infections", "UTIs", "DKA (rare)", "Fournier's gangrene (rare)"],
+          "contraindications": ["eGFR < 30-45 (varies by agent)", "recurrent UTI"],
+          "source": "ADA 2024 + EMPA-REG OUTCOME NEJM 2015",
+          "confidence": 0.97
+        }
+      ],
+      "lab_monitoring": {
+        "HbA1c": {
+          "normal_range": "<5.7%",
+          "prediabetes_range": "5.7-6.4%",
+          "target_for_most_diabetics": "<7.0%",
+          "target_older_frail_patients": "<8.0%",
+          "frequency": "Every 3 months until at goal, then every 6 months",
+          "source": "ADA Standards of Care 2024"
+        },
+        "fasting_glucose": {
+          "normal_range": "70-99 mg/dL",
+          "target_fasting": "80-130 mg/dL",
+          "target_postmeal_2hr": "<180 mg/dL",
+          "source": "ADA 2024"
+        },
+        "eGFR_and_urine_albumin": {
+          "frequency": "Annually",
+          "reason": "Early detection of diabetic nephropathy",
+          "source": "KDIGO 2024"
+        },
+        "lipid_panel": {
+          "frequency": "Annually",
+          "reason": "Diabetes significantly increases CV risk",
+          "target_LDL": "<70 mg/dL for high CV risk diabetics",
+          "source": "ADA 2024 + ACC/AHA 2019"
+        },
+        "dilated_eye_exam": {
+          "frequency": "Annually (every 2 years if no retinopathy and good control)",
+          "reason": "Diabetic retinopathy — leading cause of blindness in working-age adults",
+          "source": "ADA 2024"
+        },
+        "foot_exam": {
+          "frequency": "Annually (comprehensive) + visual check each visit",
+          "reason": "Diabetic neuropathy and peripheral vascular disease",
+          "source": "ADA 2024"
+        }
+      },
+      "complications": {
+        "microvascular": ["diabetic_retinopathy", "diabetic_nephropathy", "diabetic_neuropathy"],
+        "macrovascular": ["coronary_artery_disease", "stroke", "peripheral_arterial_disease"],
+        "other": ["diabetic_foot_ulcers", "sexual_dysfunction", "increased_infection_risk"]
+      },
+      "insurance": {
+        "preventive_coverage": {
+          "medicare": "Diabetes Prevention Program covered (CDC-recognized). Annual foot exam covered. Eye exam annually if diabetic retinopathy risk.",
+          "uhc": "DPP program covered for eligible members. CGM coverage with prior auth."
+        },
+        "medication_coverage": {
+          "medicare_part_d": "Metformin generic covered on most formularies Tier 1. GLP-1/SGLT-2 may be Tier 3-4 with prior auth. Insulin covered under Part D or Part B (if in pump).",
+          "uhc": "Formulary varies by plan. Step therapy may require metformin failure before brand coverage."
+        },
+        "dme": {
+          "medicare": "Blood glucose monitors covered under Part B. CGM covered for Type 1 and insulin-dependent Type 2 meeting criteria.",
+          "uhc": "BGM and test strips covered. CGM with PA for qualifying patients."
+        }
+      },
+      "source": {
+        "document": "ADA Standards of Medical Care in Diabetes 2024",
+        "date": "2024-01-01",
+        "url": "https://diabetesjournals.org/care/issue/47/Supplement_1"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_HTN_001",
+      "condition_name": "Hypertension (High Blood Pressure)",
+      "icd10_code": "I10",
+      "plain_english": "Your heart is working too hard to pump blood through your arteries. Over time, this damages blood vessels and increases your risk of heart attack, stroke, and kidney disease.",
+      "prevalence": "119 million Americans (47% of US adults)",
+      "diagnostic_criteria": {
+        "normal": "<120/80 mmHg",
+        "elevated": "120-129/<80 mmHg",
+        "stage_1": "130-139/80-89 mmHg",
+        "stage_2": "≥140/90 mmHg",
+        "hypertensive_crisis": "≥180/120 mmHg",
+        "source": "ACC/AHA 2017 Hypertension Guideline"
+      },
+      "treatment_options": [
+        {
+          "type": "lifestyle",
+          "details": "DASH diet reduces BP 8-14 mmHg. Sodium restriction <2300mg/day reduces 2-8 mmHg. Weight loss 1mmHg per kg lost. Exercise 90-150 min/week moderate aerobic.",
+          "source": "ACC/AHA 2017 + JNC8",
+          "confidence": 0.97
+        },
+        {
+          "type": "first_line_medications",
+          "drug_classes": [
+            {
+              "class": "Thiazide diuretics",
+              "example": "Chlorthalidone, hydrochlorothiazide",
+              "typical_dosage": "12.5–25mg daily",
+              "preferred_for": "Most patients, especially African Americans",
+              "side_effects": ["hypokalemia", "hyponatremia", "gout flare", "hyperglycemia"]
+            },
+            {
+              "class": "ACE Inhibitors",
+              "example": "Lisinopril, enalapril",
+              "typical_dosage": "5–40mg daily",
+              "preferred_for": "Diabetes with proteinuria, heart failure, post-MI",
+              "side_effects": ["dry_cough", "hyperkalemia", "angioedema (rare but serious)"],
+              "contraindications": ["pregnancy", "bilateral renal artery stenosis"]
+            },
+            {
+              "class": "ARBs",
+              "example": "Losartan, valsartan",
+              "typical_dosage": "50–100mg daily (losartan)",
+              "preferred_for": "ACE inhibitor intolerant (cough), diabetic nephropathy",
+              "side_effects": ["hyperkalemia"],
+              "contraindications": ["pregnancy"]
+            },
+            {
+              "class": "Calcium Channel Blockers",
+              "example": "Amlodipine, nifedipine",
+              "typical_dosage": "2.5–10mg daily (amlodipine)",
+              "preferred_for": "Elderly, African Americans, angina, high CV risk",
+              "side_effects": ["peripheral_edema", "constipation (verapamil)"]
+            }
+          ],
+          "source": "JNC8 2014 + ACC/AHA 2017 + ADA 2024 (for diabetics)",
+          "confidence": 0.97
+        }
+      ],
+      "lab_monitoring": {
+        "basic_metabolic_panel": { "frequency": "Annually (every 6 months if on ACEi/ARB/diuretic)", "checks": ["potassium", "creatinine", "eGFR"] },
+        "urine_albumin_creatinine_ratio": { "frequency": "Annually", "reason": "Screen for hypertensive nephropathy" },
+        "EKG": { "frequency": "At diagnosis, repeat if symptoms", "reason": "Left ventricular hypertrophy" }
+      },
+      "bp_targets": {
+        "general_adults": "<130/80 mmHg (ACC/AHA 2017)",
+        "elderly_65_plus": "<130/80 mmHg if tolerated (SPRINT trial)",
+        "diabetes": "<130/80 mmHg (ADA 2024)",
+        "CKD_with_proteinuria": "<130/80 mmHg (KDIGO 2024)",
+        "note_conflict": "JNC8 (2014) used <150/90 for age 60+; ACC/AHA 2017 recommends <130/80 for most. Current standard follows ACC/AHA 2017. See kb_conflicts.md CONFLICT_001."
+      },
+      "insurance": {
+        "preventive_coverage": {
+          "medicare": "Blood pressure screening covered annually under Welcome to Medicare visit and Annual Wellness Visit. No copay for preventive screening.",
+          "uhc": "BP screening covered under preventive benefit. Home BP monitors not typically covered."
+        },
+        "medication_coverage": {
+          "medicare_part_d": "Generic antihypertensives (HCTZ, lisinopril, amlodipine, losartan) Tier 1 on most formularies.",
+          "uhc": "Generics Tier 1. Brand antihypertensives may require step therapy."
+        }
+      },
+      "source": {
+        "document": "ACC/AHA 2017 High Blood Pressure Guideline",
+        "date": "2017-11-13"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_CAD_001",
+      "condition_name": "Coronary Artery Disease (Ischemic Heart Disease)",
+      "icd10_code": "I25.10",
+      "plain_english": "Fatty deposits (plaque) have built up inside the arteries that supply your heart muscle with blood. This narrows the arteries and can cause chest pain, heart attack, or sudden cardiac death.",
+      "icd10_variants": ["I25.10 (without angina)", "I25.110 (with unstable angina)", "I25.700 (with LBBB)"],
+      "risk_factors": ["hypertension", "diabetes", "hyperlipidemia", "smoking", "family_history", "obesity", "age_male_45plus_female_55plus"],
+      "treatment_options": [
+        {
+          "type": "medications_core",
+          "drugs": [
+            {
+              "name": "Aspirin",
+              "dosage": "81mg daily",
+              "role": "Antiplatelet — reduces MI risk",
+              "note": "For established CAD. USPSTF recommends against initiating aspirin for primary prevention in adults 60+.",
+              "source": "ACC/AHA 2019 + USPSTF 2022"
+            },
+            {
+              "name": "High-intensity statin",
+              "examples": ["atorvastatin 40-80mg", "rosuvastatin 20-40mg"],
+              "role": "LDL reduction 50%+, plaque stabilization, mortality reduction",
+              "target_LDL": "<70 mg/dL (very high risk: <55 mg/dL)",
+              "source": "ACC/AHA 2019 Cardiovascular Risk Guideline"
+            },
+            {
+              "name": "Beta-blocker",
+              "examples": ["metoprolol succinate 25-200mg daily", "carvedilol"],
+              "role": "Reduces heart rate and oxygen demand, post-MI mortality benefit",
+              "contraindications": ["severe_asthma", "bradycardia", "high-degree_AV_block"]
+            },
+            {
+              "name": "ACE inhibitor or ARB",
+              "examples": ["ramipril 2.5-10mg daily", "lisinopril"],
+              "role": "Heart failure prevention, renal protection, BP control",
+              "contraindications": ["pregnancy", "bilateral_renal_artery_stenosis"]
+            }
+          ],
+          "source": "AHA/ACC 2023 Chronic Coronary Disease Guideline",
+          "confidence": 0.97
+        }
+      ],
+      "lab_monitoring": {
+        "lipid_panel": { "frequency": "Annually", "target_LDL": "<70 mg/dL", "source": "ACC/AHA 2019" },
+        "HbA1c": { "frequency": "Annually if diabetic or prediabetic" },
+        "renal_function": { "frequency": "Annually if on ACEi/ARB" },
+        "EKG": { "frequency": "Annual + with new symptoms" }
+      },
+      "insurance": {
+        "preventive_coverage": {
+          "medicare": "Annual ECG covered at Welcome to Medicare visit. Cardiac rehab covered Part B after MI/CABG/stable angina (up to 36 sessions).",
+          "uhc": "Cardiac rehab covered post-procedure. Prior auth may be required."
+        },
+        "medication_coverage": {
+          "medicare_part_d": "Generic aspirin not covered (OTC). Generic statins Tier 1. Beta-blockers generics Tier 1.",
+          "uhc": "Generic formulary Tier 1 for most CAD medications."
+        }
+      },
+      "source": {
+        "document": "AHA/ACC 2023 Guideline for the Diagnosis and Management of Chronic Coronary Disease",
+        "date": "2023-08-01"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_HF_001",
+      "condition_name": "Heart Failure with Reduced Ejection Fraction (HFrEF)",
+      "icd10_code": "I50.20",
+      "plain_english": "Your heart muscle is weak and not pumping enough blood to meet your body's needs. This causes fluid to back up into your lungs and legs. HFrEF means the heart's pumping chamber (left ventricle) squeezes less than normal (EF <40%).",
+      "ejection_fraction_ranges": {
+        "normal": "≥50% (HFpEF if symptomatic)",
+        "mildly_reduced": "41-49% (HFmrEF)",
+        "reduced": "<40% (HFrEF)"
+      },
+      "treatment_options": [
+        {
+          "type": "guideline_directed_medical_therapy",
+          "note": "GDMT for HFrEF — four pillars proven to reduce mortality",
+          "drugs": [
+            {
+              "pillar": 1,
+              "class": "Beta-blocker",
+              "proven_agents": ["carvedilol", "metoprolol_succinate", "bisoprolol"],
+              "target_hr": "60-70 bpm at rest",
+              "mortality_reduction": "34% vs placebo (MERIT-HF)",
+              "source": "AHA/ACC 2022 HF Guideline — Class I recommendation"
+            },
+            {
+              "pillar": 2,
+              "class": "ACE inhibitor or ARB or ARNI",
+              "preferred": "Sacubitril/valsartan (Entresto) over ACEi if tolerated (PARADIGM-HF: 20% mortality reduction)",
+              "acei_example": "Lisinopril 2.5-40mg",
+              "arni_dosage": "Sacubitril/valsartan 24/26mg BID → 97/103mg BID",
+              "source": "PARADIGM-HF NEJM 2014 + AHA/ACC 2022"
+            },
+            {
+              "pillar": 3,
+              "class": "MRA (Mineralocorticoid Receptor Antagonist)",
+              "agents": ["spironolactone 25-50mg", "eplerenone 25-50mg"],
+              "benefit": "30% mortality reduction (RALES trial) in severe HF",
+              "watch": "Hyperkalemia — check K+ within 1 week of initiation",
+              "source": "RALES NEJM 1999 + AHA/ACC 2022"
+            },
+            {
+              "pillar": 4,
+              "class": "SGLT-2 Inhibitor",
+              "agents": ["dapagliflozin (Farxiga) 10mg", "empagliflozin (Jardiance) 10mg"],
+              "benefit": "25% reduction in CV death/HF hospitalization (DAPA-HF, EMPEROR-Reduced) — regardless of diabetes status",
+              "source": "DAPA-HF NEJM 2019 + AHA/ACC 2022 — Class I, new 2022"
+            }
+          ],
+          "source": "AHA/ACC 2022 Heart Failure Guideline",
+          "confidence": 0.98
+        }
+      ],
+      "monitoring": {
+        "weight": "Daily (alert care team if >2 lbs/day or >5 lbs/week weight gain)",
+        "BNP_NTproBNP": "At diagnosis and exacerbations",
+        "echocardiogram": "At diagnosis, 3-6 months after GDMT optimization",
+        "renal_electrolytes": "Every 1-2 weeks after medication changes, then quarterly"
+      },
+      "insurance": {
+        "medicare": "HF disease management program covered. Home health covered if homebound. Cardiac resynchronization therapy (CRT) covered if LVEF ≤35% + LBBB.",
+        "uhc": "Case management available for HF patients. ARNI (Entresto) may require prior auth and step therapy."
+      },
+      "source": {
+        "document": "AHA/ACC/HFSA 2022 Heart Failure Guideline",
+        "date": "2022-05-03"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_AFIB_001",
+      "condition_name": "Atrial Fibrillation",
+      "icd10_code": "I48.91",
+      "plain_english": "The upper chambers of your heart (atria) beat in a chaotic, irregular rhythm instead of a steady beat. This can cause a fast or irregular pulse, fatigue, and shortness of breath. Most importantly, AFib greatly increases stroke risk because blood can pool and clot in the atria.",
+      "stroke_risk_scoring": {
+        "tool": "CHA2DS2-VASc Score",
+        "scoring": {
+          "C_heart_failure": 1,
+          "H_hypertension": 1,
+          "A2_age_75plus": 2,
+          "D_diabetes": 1,
+          "S2_stroke_TIA_history": 2,
+          "V_vascular_disease": 1,
+          "A_age_65_74": 1,
+          "Sc_female_sex": 1
+        },
+        "anticoagulation_threshold": "Score ≥2 in males, ≥3 in females — anticoagulation recommended",
+        "source": "AHA/ACC/HRS 2023 AFib Guideline"
+      },
+      "treatment_options": [
+        {
+          "type": "anticoagulation_stroke_prevention",
+          "preferred": "DOAC (Direct Oral Anticoagulants) over warfarin for most patients",
+          "agents": [
+            { "name": "Apixaban (Eliquis)", "dosage": "5mg BID (2.5mg BID if ≥2 dose-reduction criteria)", "reversal": "Andexanet alfa" },
+            { "name": "Rivaroxaban (Xarelto)", "dosage": "20mg daily with evening meal" },
+            { "name": "Dabigatran (Pradaxa)", "dosage": "150mg BID", "reversal": "Idarucizumab" }
+          ],
+          "note": "Warfarin still used for mechanical valves and certain CKD stages. DOACs preferred for non-valvular AFib.",
+          "source": "AHA/ACC/HRS 2023 — Class I recommendation for DOACs over warfarin"
+        }
+      ],
+      "insurance": {
+        "medicare_part_d": "DOACs are Tier 3-4 on most formularies — significant copay. Generic warfarin Tier 1.",
+        "uhc": "DOACs may require prior auth. Step therapy protocols vary. Exception process available for clinical reasons."
+      },
+      "source": {
+        "document": "AHA/ACC/HRS 2023 Guideline for Atrial Fibrillation",
+        "date": "2023-11-30"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_COPD_001",
+      "condition_name": "Chronic Obstructive Pulmonary Disease (COPD)",
+      "icd10_code": "J44.1",
+      "plain_english": "COPD is a long-term lung disease where the airways are damaged and narrowed, making it hard to breathe. It includes emphysema (damaged air sacs) and chronic bronchitis (inflamed airways with cough). It's usually caused by long-term smoking.",
+      "spirometry_classification": {
+        "GOLD_1_mild": "FEV1 ≥80% predicted",
+        "GOLD_2_moderate": "FEV1 50-79% predicted",
+        "GOLD_3_severe": "FEV1 30-49% predicted",
+        "GOLD_4_very_severe": "FEV1 <30% predicted",
+        "source": "GOLD 2024 Global Strategy for COPD"
+      },
+      "treatment_options": [
+        {
+          "type": "bronchodilators",
+          "first_line": "LAMA (Long-Acting Muscarinic Antagonist)",
+          "examples": ["tiotropium (Spiriva) 18mcg inhaled daily", "umeclidinium (Incruse Ellipta)"],
+          "add_on": "LABA (Long-Acting Beta Agonist): salmeterol, formoterol",
+          "combination": "LAMA + LABA (e.g., Anoro Ellipta, Stiolto) superior to either alone for symptom reduction",
+          "source": "GOLD 2024 — preferred initial therapy",
+          "confidence": 0.96
+        },
+        {
+          "type": "inhaled_corticosteroids",
+          "note": "ICS + LABA + LAMA (triple therapy) for frequent exacerbators or eosinophil count ≥300",
+          "examples": ["fluticasone/umeclidinium/vilanterol (Trelegy Ellipta)"],
+          "caution": "ICS increases pneumonia risk — weigh against exacerbation reduction",
+          "source": "GOLD 2024 + IMPACT trial NEJM 2018"
+        },
+        {
+          "type": "pulmonary_rehabilitation",
+          "details": "6-12 week structured exercise program reduces hospitalization by 50%, improves quality of life",
+          "source": "GOLD 2024 — Grade A evidence"
+        },
+        {
+          "type": "smoking_cessation",
+          "details": "Only intervention proven to slow FEV1 decline. Combination NRT + varenicline (Chantix) most effective.",
+          "source": "Lung Health Study NEJM 1994 + GOLD 2024"
+        }
+      ],
+      "monitoring": {
+        "spirometry": "Annually to track FEV1 decline",
+        "exacerbation_history": "Track frequency (predicts future exacerbations and hospitalization)",
+        "oxygen_saturation": "Home pulse oximetry if severe COPD",
+        "vaccinations": "Annual flu, COVID, pneumococcal (PCV20 or PCV15+PPSV23)"
+      },
+      "insurance": {
+        "medicare": "Pulmonary rehabilitation covered under Part B (36 sessions). Home oxygen covered if SpO2 ≤88% at rest (Part B DME). Spirometry covered for diagnosis and monitoring.",
+        "uhc": "Pulmonary rehab covered with PA. Smoking cessation counseling covered under preventive benefit."
+      },
+      "source": {
+        "document": "GOLD 2024 Global Strategy for Prevention, Diagnosis and Management of COPD",
+        "date": "2024-01-01"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_CKD_001",
+      "condition_name": "Chronic Kidney Disease (CKD)",
+      "icd10_code": "N18.3",
+      "plain_english": "Your kidneys are not filtering blood as well as they should. CKD develops slowly over years, often from diabetes or high blood pressure. Stage 3 means your kidneys are working at 30-60% of normal capacity.",
+      "staging": {
+        "stage_1": "eGFR ≥90 (normal or high with kidney damage markers)",
+        "stage_2": "eGFR 60-89 (mildly decreased)",
+        "stage_3a": "eGFR 45-59 (mildly to moderately decreased)",
+        "stage_3b": "eGFR 30-44 (moderately to severely decreased)",
+        "stage_4": "eGFR 15-29 (severely decreased — prepare for renal replacement therapy)",
+        "stage_5": "eGFR <15 (kidney failure/ESRD)",
+        "source": "KDIGO 2024 CKD Guidelines"
+      },
+      "treatment_options": [
+        {
+          "type": "slowing_progression",
+          "drugs": [
+            { "name": "ACE inhibitor or ARB", "role": "Reduces proteinuria and slows CKD progression, especially in diabetic nephropathy", "target_UACR": "<30 mg/g" },
+            { "name": "SGLT-2 inhibitor (finerenone or dapagliflozin)", "role": "Finerenone (Kerendia) reduces CKD progression in diabetic CKD (FIDELIO trial). Dapagliflozin reduces CKD progression (DAPA-CKD)", "source": "KDIGO 2024 — new recommendation" },
+            { "name": "Blood pressure control", "target": "<130/80 mmHg" }
+          ],
+          "source": "KDIGO 2024 CKD Guideline",
+          "confidence": 0.95
+        }
+      ],
+      "medication_adjustments_in_CKD": {
+        "avoid_or_dose_reduce": ["metformin (stop if eGFR <30)", "NSAIDs (avoid chronically)", "contrast dye (use with caution)", "many antibiotics"],
+        "source": "FDA prescribing information + KDIGO 2024"
+      },
+      "monitoring": {
+        "eGFR": "Every 3-6 months",
+        "urine_albumin_creatinine_ratio": "Every 3-6 months",
+        "electrolytes_CBC": "Every 3-6 months (potassium, bicarbonate, Hgb)",
+        "nephrology_referral": "At eGFR <30 or rapid progression"
+      },
+      "insurance": {
+        "medicare": "CKD education covered (Part B) for Stages 4-5 (up to 6 sessions). ESRD: Medicare eligible at any age with ESRD (Part B covers dialysis, Part A covers kidney transplant inpatient).",
+        "uhc": "Disease management programs for CKD. Dialysis covered. Transplant medication covered under PA."
+      },
+      "source": {
+        "document": "KDIGO 2024 Clinical Practice Guideline for CKD",
+        "date": "2024-02-01"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_HYPERLIPIDEMIA_001",
+      "condition_name": "Hyperlipidemia / Dyslipidemia",
+      "icd10_code": "E78.5",
+      "plain_english": "You have too much cholesterol or other fats (lipids) in your blood. LDL ('bad') cholesterol builds up in arteries and causes heart attacks and strokes. HDL ('good') cholesterol helps remove LDL. High triglycerides also increase heart disease risk.",
+      "lab_reference_ranges": {
+        "LDL": {
+          "optimal": "<100 mg/dL",
+          "near_optimal": "100-129 mg/dL",
+          "borderline_high": "130-159 mg/dL",
+          "high": "160-189 mg/dL",
+          "very_high": "≥190 mg/dL",
+          "target_very_high_risk": "<70 mg/dL (established ASCVD or DM with risk factors)",
+          "target_extreme_risk": "<55 mg/dL (recent ACS within 12 months)",
+          "source": "ACC/AHA 2019 Cardiovascular Risk Guideline"
+        },
+        "HDL": { "low": "<40 mg/dL (male), <50 mg/dL (female)", "protective": "≥60 mg/dL" },
+        "triglycerides": { "normal": "<150 mg/dL", "borderline_high": "150-199", "high": "200-499", "very_high": "≥500 (pancreatitis risk)" },
+        "source": "ACC/AHA 2019"
+      },
+      "treatment_options": [
+        {
+          "type": "lifestyle",
+          "details": "Mediterranean diet or DASH: reduces LDL 10-20%. Soluble fiber (oatmeal, psyllium): reduces LDL 5-10%. Plant sterols 2g/day: reduces LDL 10%. Exercise: raises HDL 5-10%.",
+          "source": "ACC/AHA 2019",
+          "confidence": 0.95
+        },
+        {
+          "type": "high_intensity_statin",
+          "drugs": ["atorvastatin 40-80mg", "rosuvastatin 20-40mg"],
+          "effect": "LDL reduction 50%+",
+          "side_effects": ["myalgia (muscle pain)", "rare: rhabdomyolysis", "mild transaminase elevation", "slight diabetes risk"],
+          "monitoring": "CK and LFTs if symptomatic myopathy",
+          "source": "ACC/AHA 2019 — Class I for established ASCVD"
+        },
+        {
+          "type": "add_on_if_statin_not_enough",
+          "drugs": [
+            { "name": "Ezetimibe (Zetia)", "effect": "Additional 20% LDL reduction", "mechanism": "Reduces intestinal cholesterol absorption" },
+            { "name": "PCSK9 inhibitors (evolocumab, alirocumab)", "effect": "Additional 50-60% LDL reduction", "use": "Familial hypercholesterolemia or very high risk", "note": "Expensive — PA usually required, step therapy through statins + ezetimibe first" }
+          ],
+          "source": "ACC/AHA 2019"
+        }
+      ],
+      "insurance": {
+        "medicare_part_d": "Generic statins (atorvastatin, simvastatin, pravastatin) Tier 1. Rosuvastatin generic available. Ezetimibe generic available. PCSK9 inhibitors Tier 5 — significant OOP cost, require PA.",
+        "uhc": "Step therapy: statin first, then ezetimibe, then PCSK9 with PA and documented statin intolerance or inadequate response."
+      },
+      "source": {
+        "document": "ACC/AHA 2019 Guideline on Primary Prevention of Cardiovascular Disease",
+        "date": "2019-03-17"
+      },
+      "confidence": 0.96,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_DEPRESSION_001",
+      "condition_name": "Major Depressive Disorder",
+      "icd10_code": "F32.9",
+      "plain_english": "Depression is a medical condition where you feel persistently sad, empty, or hopeless for at least two weeks. It affects how you think, feel, and handle daily activities. Depression is not a character flaw — it's a brain chemistry and stress response disorder that responds well to treatment.",
+      "diagnostic_criteria": {
+        "tool": "PHQ-9 (Patient Health Questionnaire)",
+        "dsm5_requires": "5+ symptoms for ≥2 weeks, at least one being depressed mood or loss of interest",
+        "symptoms": ["depressed_mood", "loss_of_interest_anhedonia", "sleep_changes", "energy_loss_fatigue", "appetite_weight_changes", "concentration_difficulty", "psychomotor_changes", "worthlessness_guilt", "suicidal_ideation"],
+        "phq9_severity": { "mild": "5-9", "moderate": "10-14", "moderately_severe": "15-19", "severe": "20-27" },
+        "source": "DSM-5 + PHQ-9 Kroenke 2001"
+      },
+      "treatment_options": [
+        {
+          "type": "first_line_mild_to_moderate",
+          "approaches": ["Cognitive Behavioral Therapy (CBT) — equal efficacy to antidepressants for mild-moderate", "Exercise — 150 min/week reduces depressive symptoms (comparable to SSRI in some trials)", "Behavioral activation therapy"],
+          "source": "APA Practice Guidelines 2023",
+          "confidence": 0.95
+        },
+        {
+          "type": "antidepressants",
+          "first_line": "SSRIs (Selective Serotonin Reuptake Inhibitors)",
+          "agents": [
+            { "name": "Sertraline (Zoloft)", "dosage": "50-200mg daily", "preferred_for": "First-line, broad use, cardiac-safe" },
+            { "name": "Escitalopram (Lexapro)", "dosage": "10-20mg daily", "preferred_for": "Best tolerability, cardiac-safe, fewer interactions" },
+            { "name": "Fluoxetine (Prozac)", "dosage": "20-60mg daily", "preferred_for": "Long half-life (good if adherence concern), adolescents" }
+          ],
+          "onset": "2-6 weeks for therapeutic effect",
+          "trial_duration": "6-8 weeks at therapeutic dose before declaring failure",
+          "side_effects": ["nausea (initial)", "sexual_dysfunction", "insomnia_or_sedation", "weight_gain (long-term)"],
+          "source": "APA Practice Guidelines 2023 + FDA approved labeling",
+          "confidence": 0.96
+        }
+      ],
+      "crisis_resources": {
+        "immediate": "988 Suicide & Crisis Lifeline — call or text 988",
+        "text": "Text HOME to 741741 (Crisis Text Line)"
+      },
+      "insurance": {
+        "mental_health_parity": "Mental Health Parity and Addiction Equity Act (MHPAEA) requires mental health benefits equal to medical benefits.",
+        "medicare": "Mental health outpatient covered under Part B (20% after deductible). Inpatient under Part A. Psychotherapy covered.",
+        "uhc": "Behavioral health covered. Virtual therapy (Optum) available. Prior auth may be required for higher levels of care."
+      },
+      "source": {
+        "document": "APA Practice Guideline for the Treatment of Patients with Major Depressive Disorder, 3rd ed",
+        "date": "2023-01-01"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_ASTHMA_001",
+      "condition_name": "Asthma",
+      "icd10_code": "J45.909",
+      "plain_english": "Asthma is a chronic lung condition where airways become inflamed and narrow, causing wheezing, coughing, and shortness of breath. Triggers (allergens, exercise, cold air) cause temporary airway narrowing. Most people with asthma can live a fully active life with proper treatment.",
+      "stepwise_treatment": {
+        "step_1_intermittent": "Albuterol (SABA) as needed only. No daily controller needed.",
+        "step_2_mild_persistent": "Low-dose inhaled corticosteroid (ICS) daily — e.g., budesonide 180mcg BID or fluticasone 88mcg BID. PRN albuterol.",
+        "step_3_moderate_persistent": "Low-dose ICS + LABA (e.g., fluticasone/salmeterol or budesonide/formoterol).",
+        "step_4_severe_persistent": "Medium-dose ICS + LABA. Consider tiotropium add-on.",
+        "step_5_very_severe": "High-dose ICS + LABA + biologics (dupilumab, mepolizumab, omalizumab based on phenotype).",
+        "source": "NAEPP EPR-4 2020 + GINA 2024"
+      },
+      "rescue_inhaler_note": "Albuterol (blue inhaler) is rescue only. Reliance >2 days/week indicates poorly controlled asthma — step up controller therapy.",
+      "monitoring": {
+        "spirometry": "At diagnosis, after treatment stabilization, annually",
+        "peak_flow_monitoring": "Home peak flow meter for severe/unstable asthma",
+        "asthma_action_plan": "Written plan for every patient"
+      },
+      "insurance": {
+        "medicare": "Nebulizer covered Part B if medical necessity. ICS and SABA covered Part D. Biologics (Dupixent) Part D or Part B if infused — PA required.",
+        "uhc": "Branded inhalers require PA and step therapy through generics. Biologics require prior auth."
+      },
+      "source": {
+        "document": "NAEPP Expert Panel Report 4: Asthma Management Guidelines (2020)",
+        "date": "2020-12-03"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_HYPOTHYROID_001",
+      "condition_name": "Hypothyroidism",
+      "icd10_code": "E03.9",
+      "plain_english": "Your thyroid gland is underactive and produces too little thyroid hormone. Thyroid hormone controls metabolism — when it's low, everything slows down: heart rate, metabolism, energy, and mood.",
+      "causes": ["Hashimoto's thyroiditis (autoimmune — most common in US)", "prior thyroid surgery", "radioactive iodine treatment", "medications (amiodarone, lithium)"],
+      "symptoms": ["fatigue", "weight_gain", "cold_intolerance", "constipation", "dry_skin_hair", "bradycardia", "depression", "cognitive_slowing", "menstrual_irregularity"],
+      "lab_monitoring": {
+        "TSH": {
+          "normal_range": "0.4–4.0 mIU/L",
+          "subclinical_hypothyroid": "TSH 4.0-10 with normal Free T4",
+          "overt_hypothyroid": "TSH >10 with low Free T4",
+          "treatment_target": "TSH 0.5–2.5 mIU/L for most patients",
+          "frequency": "Every 6-12 months when stable; every 6-8 weeks after dose change",
+          "source": "ATA 2014 Guidelines (updated 2023)"
+        },
+        "free_T4": { "normal_range": "0.8–1.8 ng/dL", "frequency": "With TSH at diagnosis and dose changes" }
+      },
+      "treatment_options": [
+        {
+          "type": "levothyroxine",
+          "note": "Levothyroxine (Synthroid, generic L-T4) is standard of care",
+          "starting_dose": "1.6 mcg/kg/day (reduce for elderly and cardiac patients: start 25-50mcg)",
+          "administration": "Take on empty stomach, 30-60 min before breakfast. Avoid calcium, iron within 4 hours.",
+          "side_effects": "At correct dose: none. Overdose signs: tachycardia, insomnia, weight loss, anxiety.",
+          "source": "ATA Guidelines 2014",
+          "confidence": 0.98
+        }
+      ],
+      "insurance": {
+        "medicare_part_d": "Generic levothyroxine: Tier 1 on virtually all formularies. Brand Synthroid: Tier 3.",
+        "note": "TSH lab covered under Part B when medically necessary."
+      },
+      "source": {
+        "document": "ATA Guidelines for Hypothyroidism in Adults (2014, updated recommendations 2023)",
+        "date": "2014-12-01"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_OBESITY_001",
+      "condition_name": "Obesity",
+      "icd10_code": "E66.09",
+      "plain_english": "Obesity means having a body mass index (BMI) ≥30. It's a complex chronic disease involving genetics, environment, behavior, and metabolism — not simply a willpower issue. Obesity significantly increases risk of diabetes, heart disease, sleep apnea, joint disease, and several cancers.",
+      "bmi_classification": {
+        "underweight": "<18.5",
+        "normal": "18.5-24.9",
+        "overweight": "25-29.9",
+        "class_1_obesity": "30-34.9",
+        "class_2_obesity": "35-39.9",
+        "class_3_severe_obesity": "≥40",
+        "source": "WHO + CDC"
+      },
+      "treatment_options": [
+        {
+          "type": "lifestyle_intervention",
+          "details": "Intensive behavioral therapy: 14+ sessions/year. 5-10% weight loss reduces diabetes risk 58% (DPP trial). Diet quality > calorie counting alone.",
+          "source": "DPP Trial NEJM 2002 + USPSTF 2018"
+        },
+        {
+          "type": "pharmacotherapy",
+          "note": "Adjunct to lifestyle — not standalone",
+          "agents": [
+            { "name": "Semaglutide (Wegovy) 2.4mg weekly", "effect": "15-17% weight loss (STEP trials)", "indication": "BMI ≥30 or ≥27 with comorbidity" },
+            { "name": "Tirzepatide (Zepbound) 15mg weekly", "effect": "20-22% weight loss (SURMOUNT trials — greater than any prior agent)", "indication": "BMI ≥30 or ≥27 with comorbidity" },
+            { "name": "Naltrexone/bupropion (Contrave)", "effect": "5-8% weight loss" },
+            { "name": "Phentermine/topiramate ER (Qsymia)", "effect": "8-10% weight loss" }
+          ],
+          "source": "STEP trials NEJM 2021, SURMOUNT-1 NEJM 2022, Endocrine Society 2015",
+          "confidence": 0.95
+        },
+        {
+          "type": "bariatric_surgery",
+          "indication": "BMI ≥40, or ≥35 with obesity-related comorbidities (ASMBS 2022)",
+          "procedures": ["Roux-en-Y gastric bypass (RYGB) — 25-30% weight loss", "Sleeve gastrectomy — 20-25% weight loss"],
+          "mortality_benefit": "Reduces all-cause mortality 30-40% long-term (SOS study)",
+          "source": "ASMBS/IFSO 2022 Bariatric Surgery Guidelines"
+        }
+      ],
+      "insurance": {
+        "medicare": "Intensive Behavioral Therapy (IBT) for obesity covered under Part B (no copay when billed as preventive). Bariatric surgery covered if BMI ≥35 with comorbidity (with prior auth). Anti-obesity medications: NOT covered under standard Part D (AOM exclusion — policy gap as of 2024).",
+        "uhc": "Coverage of AOMs varies by employer plan. Most commercial plans do not cover Wegovy/Zepbound. Check specific plan formulary.",
+        "note": "CMS proposed covering AOMs under Part D in 2024 — policy evolution ongoing."
+      },
+      "source": {
+        "document": "Endocrine Society Obesity Guideline 2015 + ASMBS 2022 Bariatric Surgery Guideline",
+        "date": "2022-04-01"
+      },
+      "confidence": 0.93,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_OSTEOPOROSIS_001",
+      "condition_name": "Osteoporosis",
+      "icd10_code": "M81.0",
+      "plain_english": "Osteoporosis means your bones have become weak and brittle, increasing fracture risk. The spine, hip, and wrist are most commonly fractured. A hip fracture in an older adult is a major health event — 20-30% of patients die within a year.",
+      "diagnostic_criteria": {
+        "DXA_T_score": {
+          "normal": "≥-1.0",
+          "osteopenia": "-1.0 to -2.5",
+          "osteoporosis": "≤-2.5",
+          "severe": "≤-2.5 with fragility fracture"
+        },
+        "FRAX_tool": "10-year fracture probability — guides treatment threshold",
+        "treatment_threshold": "Hip fracture risk ≥3% or major osteoporotic fracture risk ≥20% on FRAX",
+        "source": "NOF/ASBMR Guidelines 2020 + USPSTF 2018"
+      },
+      "treatment_options": [
+        {
+          "type": "lifestyle",
+          "details": "Calcium 1000-1200mg/day (diet preferred over supplements), Vitamin D 600-800 IU/day (1000-2000 IU if deficient), Weight-bearing exercise 30 min most days, Fall prevention (physical therapy, home safety assessment)"
+        },
+        {
+          "type": "bisphosphonates",
+          "first_line": true,
+          "agents": ["alendronate (Fosamax) 70mg weekly oral", "zoledronic acid (Reclast) 5mg IV annually"],
+          "note": "Take alendronate with full glass water, remain upright 30 min — risk of esophagitis if not",
+          "drug_holiday": "Consider 'holiday' after 5 years oral or 3 years IV if stable",
+          "source": "NOF Clinician's Guide 2020",
+          "confidence": 0.97
+        }
+      ],
+      "monitoring": {
+        "DXA": "Every 1-2 years on treatment",
+        "vitamin_D_25OH": "Annually"
+      },
+      "insurance": {
+        "medicare": "DXA covered every 2 years for osteoporosis screening (women ≥65, men with risk). More frequently if on treatment. Zoledronic acid covered Part B (physician-administered infusion).",
+        "uhc": "DXA screening covered per USPSTF guidelines. Bisphosphonates Part D."
+      },
+      "source": {
+        "document": "National Osteoporosis Foundation Clinician's Guide to Prevention and Treatment of Osteoporosis (2020)",
+        "date": "2020-01-01"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_GERD_001",
+      "condition_name": "Gastroesophageal Reflux Disease (GERD)",
+      "icd10_code": "K21.0",
+      "plain_english": "GERD is when stomach acid frequently flows back up into your esophagus (food pipe), causing heartburn, chest discomfort, and sometimes damage to the esophageal lining.",
+      "treatment_options": [
+        {
+          "type": "lifestyle",
+          "details": "Avoid trigger foods (spicy, fatty, coffee, alcohol, citrus, chocolate, peppermint). Eat smaller meals. No eating within 3 hours of bedtime. Elevate head of bed 6-8 inches. Weight loss. Stop smoking.",
+          "source": "ACG GERD Guidelines 2022"
+        },
+        {
+          "type": "medications",
+          "agents": [
+            { "name": "Proton Pump Inhibitors (PPIs)", "examples": ["omeprazole 20mg", "pantoprazole 40mg", "esomeprazole 40mg"], "note": "Most effective — take 30-60 min before first meal. Long-term risks: B12 deficiency, hypomagnesemia, possible increased fracture risk. Use lowest effective dose.", "source": "ACG 2022" },
+            { "name": "H2 blockers", "examples": ["famotidine (Pepcid) 20mg BID"], "note": "Less effective than PPIs, good for breakthrough or mild symptoms" }
+          ],
+          "source": "ACG GERD Guidelines 2022",
+          "confidence": 0.95
+        }
+      ],
+      "alarm_symptoms": {
+        "require_endoscopy": ["dysphagia (difficulty swallowing)", "odynophagia (painful swallowing)", "unintentional weight loss", "GI bleeding/anemia", "persistent vomiting", "age > 50 with new GERD symptoms"],
+        "reason": "Screen for Barrett's esophagus and esophageal adenocarcinoma"
+      },
+      "insurance": {
+        "medicare_part_d": "Generic PPIs (omeprazole, pantoprazole) OTC but also covered as generic Tier 1 when prescribed.",
+        "endoscopy_coverage": "Diagnostic endoscopy covered Part B with appropriate indication."
+      },
+      "source": {
+        "document": "ACG Clinical Guidelines: GERD (2022)",
+        "date": "2022-06-01"
+      },
+      "confidence": 0.94,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "CONDITION_ANXIETY_001",
+      "condition_name": "Generalized Anxiety Disorder (GAD)",
+      "icd10_code": "F41.1",
+      "plain_english": "GAD is excessive, difficult-to-control worry about many different things, most days for at least 6 months. The worry causes real physical symptoms (muscle tension, fatigue, trouble sleeping) and significantly interferes with daily life.",
+      "diagnostic_criteria": {
+        "tool": "GAD-7 (7-item anxiety scale)",
+        "dsm5": "Excessive anxiety ≥6 months about multiple topics, with ≥3 physical symptoms",
+        "phq_gad7_severity": { "mild": "5-9", "moderate": "10-14", "severe": "15-21" }
+      },
+      "treatment_options": [
+        {
+          "type": "first_line",
+          "approaches": ["Cognitive Behavioral Therapy (CBT) — highest evidence for GAD", "SSRIs: sertraline, escitalopram", "SNRIs: venlafaxine, duloxetine"],
+          "source": "APA Practice Guidelines 2023",
+          "confidence": 0.95
+        },
+        {
+          "type": "avoid",
+          "note": "Benzodiazepines (Xanax, Klonopin, Ativan) are NOT first-line for GAD — dependence risk, cognitive impairment in elderly. Use only short-term for acute exacerbations with careful monitoring.",
+          "source": "APA 2023 + AAFP Guidelines"
+        }
+      ],
+      "insurance": {
+        "note": "Same Mental Health Parity rules as depression — see CONDITION_DEPRESSION_001 insurance section.",
+        "medicare": "Outpatient therapy covered Part B. Psychiatry covered Part B."
+      },
+      "source": {
+        "document": "APA Clinical Practice Guidelines: GAD",
+        "date": "2023-01-01"
+      },
+      "confidence": 0.94,
+      "last_validated": "2025-06-01"
+    }
+  ]
+}

@@ -40,6 +40,7 @@ class TriageResponse(BaseModel):
     thinking: Optional[str]
     risk_score: Optional[dict]
     triage_history: list[dict]
+    kb_match: Optional[dict]   # top KB rule that fired: entry_id, decision, sources
     error: Optional[str]
 
 
@@ -86,5 +87,6 @@ async def triage_endpoint(request: Request, body: TriageRequest):
         thinking=result.get("thinking"),
         risk_score=result.get("risk_score"),
         triage_history=result.get("triage_history", []),
+        kb_match=result.get("kb_match"),
         error=result.get("error"),
     )

@@ -68,6 +68,15 @@ Routes symptoms to the appropriate care setting.
     "overall_risk": 74.9,
     "tier": "high",
     "predicted_annual_cost": 23500
+  },
+  "kbMatch": {
+    "entry_id": "EMERGENCY_CHEST_002",
+    "category": "emergency",
+    "decision": "CALL_911",
+    "confidence": 0.97,
+    "sources": [
+      {"title": "MedlinePlus - Chest Pain", "url": "https://medlineplus.gov/chestpain.html", "accessed_date": "2026-05-13"}
+    ]
   }
 }
 ```
@@ -137,7 +146,7 @@ Start server: `uvicorn src.backend.api.server:app --port 8000 --reload`
 
 ### POST /api/backend/triage
 
-Runs the full LangGraph triage agent (5 nodes, extended thinking).
+Runs the full LangGraph triage agent (6 nodes, extended thinking + KB rule injection).
 
 **Request**
 ```json
@@ -169,6 +178,15 @@ Runs the full LangGraph triage agent (5 nodes, extended thinking).
     "predicted_annual_cost": 18000
   },
   "triage_history": [...],
+  "kb_match": {
+    "entry_id": "EMERGENCY_CHEST_002",
+    "category": "emergency",
+    "decision": "CALL_911",
+    "confidence": 0.97,
+    "sources": [
+      {"title": "MedlinePlus - Chest Pain", "url": "https://medlineplus.gov/chestpain.html", "accessed_date": "2026-05-13"}
+    ]
+  },
   "error": null
 }
 ```

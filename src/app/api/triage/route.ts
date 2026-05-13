@@ -198,6 +198,7 @@ CRITICAL RULES:
         costComparison: pythonResult.cost_analysis || {},
         riskScore: pythonResult.risk_score || null,
         triageHistory: pythonResult.triage_history || [],
+        kbMatch: pythonResult.kb_match ?? null,
       });
     }
 

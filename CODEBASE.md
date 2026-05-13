@@ -69,11 +69,12 @@ Four independent validation functions, each returning `{ valid, errors, warnings
 1. Zod parse → rate limit (IP + member) → injection check → PII check → symptom validation
 2. Member lookup → claims → triage history
 3. Audit log (request)
-4. Claude API — extended thinking enabled, system prompt includes full member context
-5. Parse JSON response from Claude
-6. Apply output guardrails to clinical reasoning
-7. Audit log (response with recommendation + confidence)
-8. Return: recommendation, clinical reasoning, reasoning breakdown, cost comparison, safety info
+4. Try Python backend (LangGraph 6-node agent with KB search + extended thinking); pass through full response including `kbMatch`
+5. Fallback: Claude API — extended thinking enabled, system prompt includes full member context
+6. Parse JSON response from Claude
+7. Apply output guardrails to clinical reasoning
+8. Audit log (response with recommendation + confidence)
+9. Return: recommendation, clinical reasoning, reasoning breakdown, cost comparison, safety info, kbMatch
 
 **Extended thinking:** Budget of 800 tokens. The thinking text is included in the response (`reasoning.thinkingProcess`) truncated to 500 chars for transparency.
 
@@ -101,12 +102,20 @@ POST /api/triage { memberId, symptoms }
     → getMemberById() [mockData]
     → getClaimsForMember() [mockData]
     → getTriageHistoryForMember() [mockData]
-    → Build system prompt (member context injected)
-    → Claude claude-sonnet-4-6 + extended thinking
-    → Parse JSON response
+    → callPythonBackend() [if PYTHON_BACKEND_URL set]
+          → validate_input (safety layer)
+          → enrich_with_history (DB + risk score)
+          → search_kb (KB_RULES cache → top 3 matches, log rule ID)
+          → call_claude_triage (member context + KB rules injected into system prompt)
+          → parse_and_route (JSON parse + severity override)
+          → calculate_cost_impact (cost comparison + persist + output filter)
+          → return { recommendation, reasoning, kb_match, ... }
+    → [fallback] Build system prompt (member context injected)
+    → [fallback] Claude claude-sonnet-4-6 + extended thinking
+    → [fallback] Parse JSON response
     → applyOutputGuardrails()
     → logTriageResponse() [audit]
-    → Return TriageResult
+    → Return TriageResult (includes kbMatch when Python backend active)
 ```
 
 ### Risk Score Flow
@@ -143,15 +152,20 @@ scoreRisk(member, claims)
 
 ## Python Backend (`src/backend/`)
 
+### `src/backend/knowledge_base/kb_search.py`
+
+Loads `healthcare_kb_decision_rules.json` (50 rules: emergency, insurance, screening, drug) into a module-level `KB_RULES` cache at server startup via `load_decision_rules()`. `search_kb(query, top_k)` scores each rule by keyword overlap (stop-word filtered, phrase-level bonus, whole-word match bonus) and returns the top matches sorted by score then confidence. `format_kb_rules_for_prompt(rules)` renders matches into a structured block for system prompt injection.
+
 ### `src/backend/agents/triage_agent.py`
 
-**LangGraph workflow (5 nodes):**
+**LangGraph workflow (6 nodes):**
 ```
-validate_input → enrich_with_history → call_claude_triage → parse_and_route → calculate_cost_impact
+validate_input → enrich_with_history → search_kb → call_claude_triage → parse_and_route → calculate_cost_impact
 ```
 - `validate_input`: runs Python safety layer — self-harm (returns 988 immediately), injection, PII redaction
 - `enrich_with_history`: fetches member, 50 claims, 5 prior triages; computes current risk score
-- `call_claude_triage`: `claude-opus-4-7` + `thinking: {budget_tokens: 800}`. System prompt injects member age, conditions, meds, risk tier, triage history. Forces JSON output.
+- `search_kb`: calls `search_kb(symptoms, top_k=3)`; logs matched rule ID + confidence; stores top match as `kb_match` in state
+- `call_claude_triage`: `claude-opus-4-7` + `thinking: {budget_tokens: 800}`. System prompt = base TRIAGE_SYSTEM_PROMPT + KB rules block (emergency rules with confidence >0.95 injected first). Forces JSON output.
 - `parse_and_route`: parses JSON, validates against enum, applies severity override
 - `calculate_cost_impact`: compares recommended vs. ER cost; persists outcome; applies output filter
 

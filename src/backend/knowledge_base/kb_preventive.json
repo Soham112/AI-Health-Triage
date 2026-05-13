@@ -1,0 +1,578 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2026-05-13",
+    "description": "Preventive KB: Screening recommendations, vaccine schedules, and gap detection triggers. Source: USPSTF, CDC, CMS, ACIP.",
+    "sources": ["USPSTF 2021-2024", "CDC Adult Immunization Schedule 2024", "CMS Preventive Services (Medicare Benefit Policy Manual Ch.15 2024)", "ADA 2024 (diabetes)", "AHA/ACC (cardiovascular)", "ACIP 2024"],
+    "total_entries": 18,
+    "medical_review_required": true,
+    "disclaimer": "Screening recommendations are population-level guidance. Individual clinical decisions require physician judgment. Coverage details may vary by plan year and state."
+  },
+  "entries": [
+    {
+      "id": "SCREEN_COLORECTAL_001",
+      "screening_type": "Colorectal Cancer Screening",
+      "uspstf_grade": "A (for 45-49), A (for 50-75)",
+      "target_population": {
+        "general": "All adults 45-75 years",
+        "high_risk": "Earlier screening for: family history of CRC in first-degree relative <60 years, Lynch syndrome, familial adenomatous polyposis (FAP), personal history of polyps or IBD"
+      },
+      "recommended_tests": [
+        { "test": "Colonoscopy", "frequency": "Every 10 years", "preferred_for": "Most complete — therapeutic (polyp removal) at same time" },
+        { "test": "Fecal Immunochemical Test (FIT)", "frequency": "Annually", "note": "Non-invasive, no bowel prep. Positive requires colonoscopy follow-up." },
+        { "test": "High-sensitivity guaiac FOBT (Hemoccult SENSA)", "frequency": "Annually" },
+        { "test": "FIT-DNA (Cologuard)", "frequency": "Every 1-3 years", "note": "Medicare covers every 3 years for age 50+. Higher false positive rate than FIT alone." },
+        { "test": "CT Colonography (virtual colonoscopy)", "frequency": "Every 5 years" },
+        { "test": "Flexible Sigmoidoscopy", "frequency": "Every 5 years (or every 10 years + annual FIT)" }
+      ],
+      "evidence": {
+        "mortality_reduction": "CRC mortality reduced 15-33% with screening",
+        "source": "USPSTF Grade A 2021",
+        "absolute_benefit": "Colonoscopy: 3-4 fewer CRC deaths per 1000 screened over 25 years"
+      },
+      "gaps_detection": {
+        "trigger": "Member age 45-75 with no colonoscopy in past 10 years AND no FIT in past year AND no FIT-DNA in past 3 years",
+        "priority": "HIGH",
+        "action": "Outreach for screening. Offer FIT as low-barrier first option."
+      },
+      "insurance": {
+        "medicare": "Colonoscopy: covered every 10 years (every 2 years high risk) — no copay if no polyps found. FIT: covered annually. Cologuard: covered every 3 years age 50+. No copay for preventive colonoscopy (Note: If polyp removed during screening, some cost-sharing may apply — Bipartisan legislation eliminated this for Medicare 2023+).",
+        "uhc": "Colonoscopy covered per USPSTF. FIT covered annually. Cologuard covered. Check specific plan for polyp removal cost-sharing."
+      },
+      "source": {
+        "document": "USPSTF Colorectal Cancer Screening — Final Recommendation Statement",
+        "date": "2021-05-18",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening"
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_BREAST_001",
+      "screening_type": "Breast Cancer Screening (Mammography)",
+      "uspstf_grade": "B",
+      "target_population": {
+        "general": "Women 40-74 years (USPSTF 2024 updated from prior 50-74)",
+        "high_risk": "Women with BRCA1/BRCA2 mutation or first-degree relative with mutation — earlier screening with MRI + mammography (USPSTF separate recommendation)"
+      },
+      "recommended_tests": [
+        { "test": "Digital mammography or Digital Breast Tomosynthesis (3D mammography)", "frequency": "Every 2 years for 40-74 (every year is an option — discussed with patient per shared decision-making)" }
+      ],
+      "evidence": {
+        "mortality_reduction": "Mammography reduces breast cancer mortality 15-20% in screened population",
+        "harms": "False positives: 50-60% of women screened annually for 10 years will have a false positive requiring additional imaging. Overdiagnosis: 19% of screen-detected cancers may be overdiagnosed (DCIS).",
+        "source": "USPSTF 2024 Final Recommendation"
+      },
+      "note_conflict": "ACR/SBI recommend annual mammography starting at 40. USPSTF 2024 now recommends every-other-year starting at 40 (updated from 2016). ACS recommends annual at 45 with option at 40. See kb_conflicts.md CONFLICT_002.",
+      "gaps_detection": {
+        "trigger": "Female member age 40-74 with no mammogram in past 2 years",
+        "priority": "HIGH",
+        "action": "Outreach for scheduling. Offer navigation support."
+      },
+      "insurance": {
+        "medicare": "Annual screening mammography covered for women 40+ (once every 12 months). No copay. Diagnostic mammography (for symptoms) covered differently.",
+        "uhc": "Annual mammography covered for women 40+. 3D mammography (tomosynthesis) covered."
+      },
+      "source": {
+        "document": "USPSTF Breast Cancer Screening — Final Recommendation Statement 2024",
+        "date": "2024-04-30",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_CERVICAL_001",
+      "screening_type": "Cervical Cancer Screening (Pap + HPV)",
+      "uspstf_grade": "A",
+      "target_population": {
+        "general": "Women 21-65 years",
+        "not_indicated": "Women <21, women >65 with adequate prior screening, women who have had a hysterectomy with cervix removal for non-cancer reasons"
+      },
+      "recommended_tests": [
+        { "test": "Pap smear (cytology) alone", "frequency": "Every 3 years for ages 21-65" },
+        { "test": "High-risk HPV (hrHPV) test alone", "frequency": "Every 5 years for ages 30-65", "note": "Preferred by ACS for ages 25-65" },
+        { "test": "Co-testing (Pap + HPV)", "frequency": "Every 5 years for ages 30-65" }
+      ],
+      "evidence": {
+        "mortality_reduction": "Routine cervical screening has reduced cervical cancer incidence and mortality >70% since 1970s",
+        "source": "USPSTF Grade A 2018 (reaffirmed, HPV vaccine doesn't change screening recommendations)"
+      },
+      "gaps_detection": {
+        "trigger": "Female member age 21-65 with no Pap smear in past 3 years (or no co-test/hrHPV in past 5 years if age 30+)",
+        "priority": "HIGH",
+        "action": "Outreach. Note: women who have received HPV vaccine still need cervical screening."
+      },
+      "insurance": {
+        "medicare": "Pap smear and pelvic exam covered every 24 months (every 12 months for high risk). No copay.",
+        "uhc": "Cervical screening covered per USPSTF intervals. No copay as preventive."
+      },
+      "source": {
+        "document": "USPSTF Cervical Cancer Screening — Final Recommendation Statement",
+        "date": "2018-08-21",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening"
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_LUNG_001",
+      "screening_type": "Lung Cancer Screening (Low-Dose CT)",
+      "uspstf_grade": "B",
+      "target_population": {
+        "general": "Adults 50-80 years who have a 20 pack-year smoking history AND currently smoke or quit within past 15 years",
+        "discontinue": "Once not smoked for 15+ years or health condition limiting life expectancy or ability to undergo curative surgery"
+      },
+      "recommended_tests": [
+        { "test": "Annual low-dose CT (LDCT) scan of the chest", "frequency": "Annually" }
+      ],
+      "evidence": {
+        "mortality_reduction": "NLST trial: 20% reduction in lung cancer mortality. NELSON trial: 24% reduction in men, 33% in women.",
+        "absolute_benefit": "~3 fewer lung cancer deaths per 1000 screened over 6 years",
+        "harms": "False positives: ~25% have positive screens; most are benign. Radiation exposure (low). Incidental findings requiring follow-up.",
+        "source": "NLST NEJM 2011 + NELSON NEJM 2020"
+      },
+      "gaps_detection": {
+        "trigger": "Member age 50-80 with documented 20+ pack-year smoking history, current smoker or quit <15 years, no LDCT in past year",
+        "priority": "HIGH",
+        "action": "Outreach with smoking cessation counseling offer AND LDCT scheduling."
+      },
+      "insurance": {
+        "medicare": "Annual LDCT covered for ages 50-77 meeting criteria. Must include counseling on benefits/harms and smoking cessation intervention.",
+        "uhc": "Covered per USPSTF criteria. Prior auth may be required."
+      },
+      "source": {
+        "document": "USPSTF Lung Cancer Screening — Final Recommendation Statement",
+        "date": "2021-03-09",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_DIABETES_001",
+      "screening_type": "Type 2 Diabetes / Prediabetes Screening",
+      "uspstf_grade": "B",
+      "target_population": {
+        "general": "Adults 35-70 years who are overweight (BMI ≥25) or obese (BMI ≥30)",
+        "high_risk": "Screen earlier for: gestational diabetes history, polycystic ovary syndrome, family history T2DM, Hispanic/Latino, Black, Asian, Native American, Pacific Islander populations (at lower BMI cutoffs — AAPI BMI ≥23)"
+      },
+      "recommended_tests": [
+        { "test": "Fasting plasma glucose", "frequency": "Every 3 years if normal; annually if prediabetic" },
+        { "test": "HbA1c", "frequency": "Every 3 years if normal; annually if prediabetic" },
+        { "test": "Oral Glucose Tolerance Test (OGTT)", "frequency": "Diagnostic gold standard" }
+      ],
+      "prediabetes_intervention": {
+        "diagnosis": "FPG 100-125 mg/dL or HbA1c 5.7-6.4%",
+        "intervention": "CDC-recognized Diabetes Prevention Program (DPP) — 5-7% weight loss + 150 min/week exercise = 58% reduction in T2DM development (DPP trial NEJM 2002)",
+        "source": "ADA 2024 + DPP Research Group"
+      },
+      "gaps_detection": {
+        "trigger": "Member age 35-70 with BMI ≥25 and no HbA1c or fasting glucose in past 3 years",
+        "priority": "HIGH",
+        "action": "Outreach for lab work. If prediabetic, enroll in DPP program."
+      },
+      "insurance": {
+        "medicare": "Diabetes screening covered for high-risk adults (up to 2 tests/year if high risk). DPP program covered under Part B for prediabetes. No copay for preventive screening.",
+        "uhc": "Diabetes screening covered. DPP program covered for eligible members."
+      },
+      "source": {
+        "document": "USPSTF Screening for Prediabetes and Type 2 Diabetes — Final Recommendation Statement",
+        "date": "2021-08-24",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/screening-for-prediabetes-and-type-2-diabetes"
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_BP_001",
+      "screening_type": "Hypertension Screening",
+      "uspstf_grade": "A",
+      "target_population": "All adults 18 years and older",
+      "recommended_tests": [
+        { "test": "Blood pressure measurement", "frequency": "Adults 18-39 with normal BP (<130/85) and no risk factors: every 3-5 years. Adults 40+ or elevated risk: annually." }
+      ],
+      "evidence": {
+        "benefit": "Detecting and treating HTN reduces stroke by 35-40%, MI by 20-25%, heart failure by 50%",
+        "source": "USPSTF Grade A 2021"
+      },
+      "gaps_detection": {
+        "trigger": "Member age 40+ with no BP reading documented in past 12 months",
+        "priority": "MEDIUM",
+        "action": "Remind at next healthcare visit. Many pharmacies offer free BP checks."
+      },
+      "insurance": {
+        "medicare": "BP screening covered at Annual Wellness Visit and Welcome to Medicare Visit. No copay.",
+        "uhc": "BP screening covered as preventive service. No copay."
+      },
+      "source": {
+        "document": "USPSTF Hypertension Screening — Final Recommendation Statement",
+        "date": "2021-04-27"
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_LIPID_001",
+      "screening_type": "Dyslipidemia / Lipid Screening",
+      "uspstf_grade": "B (for statin use in prevention), no grade for screening alone",
+      "target_population": {
+        "general": "Adults 21+ with cardiovascular risk factors. ACC/AHA recommends universal screening.",
+        "high_priority": "Adults 40-75 years for ASCVD risk assessment and statin decision-making"
+      },
+      "recommended_tests": [
+        { "test": "Fasting lipid panel (Total cholesterol, LDL, HDL, triglycerides)", "frequency": "Every 5 years if normal and low risk. Every 1-2 years if on treatment or elevated risk. Annually for high-risk (diabetes, CAD, CKD)." }
+      ],
+      "statin_preventive_use": {
+        "uspstf_recommendation": "Grade B — Low to moderate dose statin for adults 40-75 with no CVD history, 1+ CVD risk factors, and 10-year ASCVD risk ≥10% (pooled cohort equations)",
+        "source": "USPSTF 2022 Statin Use for Prevention of CVD"
+      },
+      "gaps_detection": {
+        "trigger": "Member age 40+ with diabetes or hypertension and no lipid panel in past 12 months",
+        "priority": "HIGH",
+        "action": "Order fasting lipid panel at next visit."
+      },
+      "insurance": {
+        "medicare": "Cardiovascular disease screening blood tests (total cholesterol, LDL, HDL, TG) covered once every 5 years. More frequently when monitoring treatment under Part B (medical necessity).",
+        "uhc": "Lipid panels covered for preventive screening and treatment monitoring."
+      },
+      "source": {
+        "document": "ACC/AHA 2019 Cardiovascular Risk Guideline + USPSTF Statin Use 2022",
+        "date": "2022-08-23"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_OSTEOPOROSIS_001",
+      "screening_type": "Osteoporosis Screening (Bone Density / DXA)",
+      "uspstf_grade": "B",
+      "target_population": {
+        "women": "Women 65 years and older. Postmenopausal women <65 years whose 10-year fracture risk (FRAX) is ≥9.3% (equal to 65-year-old white woman with no other risk factors).",
+        "men": "USPSTF: Insufficient evidence (I statement). NOF: Screen men 70+. ACP: Screen men 65-70+ with risk factors.",
+        "risk_factors": ["low body weight BMI <21", "fracture after 50", "prior corticosteroid use", "rheumatoid arthritis", "parental hip fracture history", "smoking", "alcohol >3 drinks/day"]
+      },
+      "recommended_tests": [
+        { "test": "DXA (Dual-energy X-ray Absorptiometry)", "sites": "Spine + hip", "frequency": "Every 2 years while on treatment; every 2-5 years for monitoring in those not on treatment" }
+      ],
+      "gaps_detection": {
+        "trigger": "Female member age 65+ with no DXA in past 2 years OR postmenopausal female <65 with documented risk factors and no DXA",
+        "priority": "HIGH",
+        "action": "Refer for DXA. Calculate FRAX score."
+      },
+      "insurance": {
+        "medicare": "DXA covered every 24 months for: women 65+, postmenopausal women with fracture risk factors, men 65+ on Medicare (non-USPSTF coverage), patients on long-term glucocorticoids. No copay for preventive indication.",
+        "uhc": "DXA covered per USPSTF for women 65+. Additional coverage for high-risk postmenopausal women."
+      },
+      "source": {
+        "document": "USPSTF Osteoporosis to Prevent Fractures — Final Recommendation Statement",
+        "date": "2018-06-26",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/osteoporosis-screening"
+      },
+      "confidence": 0.96,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_DEPRESSION_001",
+      "screening_type": "Depression Screening",
+      "uspstf_grade": "B",
+      "target_population": "All adults 18 years and older. Including pregnant and postpartum women (Grade B).",
+      "recommended_tests": [
+        { "test": "PHQ-2 (2-question screen)", "frequency": "Annually or at preventive visits", "note": "If positive, administer PHQ-9 for severity" },
+        { "test": "PHQ-9 (full assessment)", "frequency": "When PHQ-2 positive or depression suspected" }
+      ],
+      "gaps_detection": {
+        "trigger": "Member with no depression screening in past 12 months at preventive visit",
+        "priority": "MEDIUM",
+        "action": "Include PHQ-2 in annual wellness visit. Address positive screens."
+      },
+      "insurance": {
+        "medicare": "Depression screening covered once per year at Annual Wellness Visit. No copay.",
+        "uhc": "Depression screening covered as preventive service."
+      },
+      "source": {
+        "document": "USPSTF Depression, Anxiety, and Suicide Risk in Adults — Final Recommendation Statement",
+        "date": "2023-06-20",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/depression-anxiety-and-suicide-risk-screening-adults"
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_AAA_001",
+      "screening_type": "Abdominal Aortic Aneurysm (AAA) Screening",
+      "uspstf_grade": "B",
+      "target_population": {
+        "criteria": "Men 65-75 years who have EVER smoked (≥100 cigarettes in lifetime)",
+        "not_recommended": "Women who have never smoked (Grade D). Women who have ever smoked (insufficient evidence — I statement)."
+      },
+      "recommended_tests": [
+        { "test": "One-time abdominal ultrasound", "frequency": "One-time screen. Surveillance if small AAA found (3.0-5.4cm every 6-12 months)." }
+      ],
+      "evidence": {
+        "mortality_reduction": "AAA rupture has 80% mortality. Elective repair <2% mortality. Screening reduces AAA-related mortality 43% in men.",
+        "source": "USPSTF Grade B 2019 + MASS trial"
+      },
+      "gaps_detection": {
+        "trigger": "Male member age 65-75 with smoking history and no AAA ultrasound on record",
+        "priority": "HIGH",
+        "action": "One-time ultrasound screening. Coordinate with PCP."
+      },
+      "insurance": {
+        "medicare": "One-time AAA ultrasound covered for qualifying male smokers 65-75 at Welcome to Medicare visit. No copay.",
+        "uhc": "Covered per USPSTF criteria."
+      },
+      "source": {
+        "document": "USPSTF Abdominal Aortic Aneurysm Screening — Final Recommendation Statement",
+        "date": "2019-12-10",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/abdominal-aortic-aneurysm-screening"
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_HIV_001",
+      "screening_type": "HIV Screening",
+      "uspstf_grade": "A",
+      "target_population": {
+        "general": "All adults and adolescents 15-65 years (at least once)",
+        "high_risk": "Annual screening for: MSM, injection drug users, multiple sex partners, sex with HIV+ person"
+      },
+      "recommended_tests": [
+        { "test": "4th-generation HIV antigen/antibody combination test", "frequency": "At least once for all 15-65. Annually for high-risk." }
+      ],
+      "gaps_detection": {
+        "trigger": "Member age 15-65 with no HIV test on record",
+        "priority": "MEDIUM",
+        "action": "Offer HIV testing at next healthcare visit."
+      },
+      "insurance": {
+        "medicare": "HIV screening covered annually for age 15-65 and for high-risk older adults. No copay.",
+        "uhc": "HIV screening covered as preventive service."
+      },
+      "source": {
+        "document": "USPSTF HIV Infection Screening — Final Recommendation Statement",
+        "date": "2019-06-11"
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_OBESITY_001",
+      "screening_type": "Obesity Screening and Counseling",
+      "uspstf_grade": "B",
+      "target_population": "All adults 18 years and older",
+      "recommended_tests": [
+        { "test": "BMI calculation", "frequency": "Annually" }
+      ],
+      "intervention": {
+        "threshold": "BMI ≥30: Offer or refer to intensive, multicomponent behavioral intervention",
+        "program": "Intensive Behavioral Therapy (IBT): 12-26 sessions in first year. Covered by Medicare with no copay.",
+        "content": "Goal-setting, self-monitoring, problem-solving, behavioral strategies for diet and physical activity",
+        "source": "USPSTF 2018"
+      },
+      "gaps_detection": {
+        "trigger": "Member with BMI ≥30 and no behavioral counseling or weight management program engagement in past 12 months",
+        "priority": "MEDIUM",
+        "action": "Refer to IBT program. Coordinate with PCP for pharmacotherapy evaluation."
+      },
+      "insurance": {
+        "medicare": "IBT for obesity: covered 22 sessions in 12 months (first 3 months: weekly; months 4-6: biweekly; months 7-12: monthly if 3kg lost). No copay. Must be delivered by primary care provider.",
+        "uhc": "Weight management programs covered. Commercial plans vary widely on AOM (anti-obesity medication) coverage."
+      },
+      "source": {
+        "document": "USPSTF Weight Loss to Prevent Obesity-Related Morbidity and Mortality in Adults — Final Recommendation Statement",
+        "date": "2018-09-18"
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_STATIN_001",
+      "screening_type": "Statin Use for Primary CVD Prevention",
+      "uspstf_grade": "B",
+      "target_population": "Adults 40-75 years with 1+ CVD risk factors (dyslipidemia, diabetes, hypertension, or smoking) AND estimated 10-year CVD event risk ≥10%",
+      "recommended_intervention": [
+        { "test": "Calculate 10-year ASCVD risk (ACC/AHA Pooled Cohort Equations)", "frequency": "At preventive visit for adults 40-75" },
+        { "action": "Prescribe low-to-moderate dose statin if criteria met", "examples": ["atorvastatin 10-20mg", "rosuvastatin 5-10mg", "simvastatin 20-40mg"] }
+      ],
+      "evidence": {
+        "benefit": "Statins reduce major cardiovascular events (MI, stroke, cardiovascular death) by ~25% in primary prevention for qualifying patients",
+        "source": "USPSTF 2022 + ACC/AHA 2019 meta-analyses"
+      },
+      "gaps_detection": {
+        "trigger": "Member age 40-75 with diabetes or hypertension or hyperlipidemia, calculated 10-year ASCVD risk ≥10%, and no statin on medication list",
+        "priority": "HIGH",
+        "action": "Flag for PCP review. Discuss statin initiation at next visit."
+      },
+      "insurance": {
+        "medicare_part_d": "Generic statins (atorvastatin, simvastatin, pravastatin, rosuvastatin) Tier 1 on most formularies. <$5/month generic cost.",
+        "uhc": "Generic statins Tier 1. No prior auth required for generics."
+      },
+      "source": {
+        "document": "USPSTF Statin Use for the Primary Prevention of CVD Events — Final Recommendation Statement",
+        "date": "2022-08-23",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/statin-use-in-adults-preventive-medication"
+      },
+      "confidence": 0.96,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "VAX_FLU_001",
+      "screening_type": "Influenza Vaccination",
+      "type": "vaccine",
+      "acip_recommendation": "Grade A",
+      "target_population": "All persons ≥6 months without contraindications — annually",
+      "recommended_vaccine": {
+        "standard": "Inactivated influenza vaccine (IIV4) or recombinant (RIV4)",
+        "high_dose_preferred": "Adults 65+: High-dose IIV4 (Fluzone HD) or adjuvanted IIV4 (Fluad) — 24% more effective than standard dose in older adults",
+        "frequency": "Annually, preferably by end of October. Still beneficial if given later."
+      },
+      "evidence": {
+        "benefit": "Reduces influenza-related hospitalizations 40-60% in general population. High-dose IIV4 reduces hospitalizations 26% more than standard dose in adults 65+.",
+        "source": "ACIP 2024 Adult Immunization Schedule + DiazGranados NEJM 2014"
+      },
+      "gaps_detection": {
+        "trigger": "Member with no influenza vaccination in current flu season (September–April)",
+        "priority": "HIGH",
+        "action": "Remind members each October. Offer pharmacy-administered vaccine information."
+      },
+      "insurance": {
+        "medicare": "Part B covers annual flu shot at no cost. No deductible or copay.",
+        "uhc": "Annual flu shot covered as preventive. Available at in-network pharmacies and providers."
+      },
+      "source": {
+        "document": "ACIP 2024-25 Influenza Vaccine Recommendations",
+        "date": "2024-08-01"
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "VAX_PNEUMOCOCCAL_001",
+      "screening_type": "Pneumococcal Vaccination",
+      "type": "vaccine",
+      "acip_recommendation": "Routine",
+      "target_population": {
+        "adults_65_plus": "PCV20 (single dose, preferred) OR PCV15 followed by PPSV23 (8 weeks later) if not previously vaccinated",
+        "adults_19_64_high_risk": "PCV (any above) for immunocompromising conditions, CSF leak, cochlear implant, chronic lung/heart/liver/kidney disease, diabetes, alcoholism, smoking"
+      },
+      "evidence": {
+        "benefit": "Pneumococcal disease causes ~150,000 hospitalizations in adults/year in US. PCV20 covers 77% of pneumococcal strains causing invasive disease in adults.",
+        "source": "ACIP 2021 + CAPITA trial"
+      },
+      "gaps_detection": {
+        "trigger": "Member age 65+ with no pneumococcal vaccine on record",
+        "priority": "HIGH",
+        "action": "Offer PCV20 at next clinical encounter."
+      },
+      "insurance": {
+        "medicare": "Part B covers pneumococcal vaccines with no copay. PCV15 + PPSV23 or PCV20 both covered.",
+        "uhc": "Pneumococcal vaccines covered as preventive."
+      },
+      "source": {
+        "document": "ACIP Pneumococcal Vaccination Recommendations for Adults (2021, updated 2024)",
+        "date": "2021-07-16"
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "VAX_SHINGLES_001",
+      "screening_type": "Shingles (Herpes Zoster) Vaccination (Shingrix)",
+      "type": "vaccine",
+      "acip_recommendation": "Strong recommendation",
+      "target_population": {
+        "immunocompetent": "Adults 50 years and older: 2 doses of RZV (Shingrix), 2-6 months apart",
+        "immunocompromised": "Adults 19+ who are or will be immunodeficient (2 doses, 1-2 months apart)"
+      },
+      "vaccine": "Recombinant Zoster Vaccine (RZV/Shingrix) — preferred over older live-attenuated ZVL (Zostavax, discontinued in US 2020)",
+      "evidence": {
+        "efficacy": "Shingrix 97.2% efficacy against shingles in adults 50-69; 91.3% in adults 70+. Efficacy persists 10+ years.",
+        "postherpetic_neuralgia": "Reduces PHN (chronic nerve pain post-shingles) by >90%",
+        "source": "ZOE-50 and ZOE-70 trials NEJM 2015-2016"
+      },
+      "note": "Prior chickenpox disease or prior Zostavax vaccination — still recommend Shingrix.",
+      "gaps_detection": {
+        "trigger": "Member age 50+ with fewer than 2 doses of Shingrix (RZV) on record",
+        "priority": "MEDIUM",
+        "action": "Recommend Shingrix 2-dose series. Available at pharmacies."
+      },
+      "insurance": {
+        "medicare": "Shingrix covered under Part D (NOT Part B) — coverage and copay vary by plan. Some gap/low copay plans cover at low/no cost.",
+        "uhc": "Covered under pharmacy benefit (Part D). Check specific plan formulary.",
+        "note": "Unlike flu and pneumococcal (Part B — $0 copay), Shingrix under Part D may have significant copay depending on plan. IRMAA and coverage gap may apply."
+      },
+      "source": {
+        "document": "ACIP Recommendations for Use of Herpes Zoster Vaccines (2018, updated 2022)",
+        "date": "2022-06-01"
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "VAX_COVID_001",
+      "screening_type": "COVID-19 Vaccination",
+      "type": "vaccine",
+      "acip_recommendation": "Routine",
+      "target_population": {
+        "general": "All adults ≥6 months (routine schedule)",
+        "priority_boosters": "Adults 65+ and immunocompromised: additional dose of 2024-2025 updated mRNA vaccine recommended"
+      },
+      "recommended_vaccine": {
+        "2024_2025_season": "Updated mRNA vaccines targeting current circulating variants (Moderna or Pfizer-BioNTech). ACIP recommends all adults ≥65 receive additional dose of 2024-2025 vaccine.",
+        "source": "ACIP 2024-25 COVID-19 Vaccine Recommendations"
+      },
+      "gaps_detection": {
+        "trigger": "Member 65+ with no updated 2024-2025 COVID-19 vaccine",
+        "priority": "HIGH",
+        "action": "Strongly recommend for all adults 65+. Note: recommendations evolve — check CDC.gov for current guidance."
+      },
+      "insurance": {
+        "medicare": "COVID-19 vaccines covered under Part B at no cost.",
+        "uhc": "COVID-19 vaccines covered as preventive."
+      },
+      "note": "COVID-19 vaccine recommendations evolve rapidly with emerging variants and evidence. Always verify against current CDC/ACIP guidance at cdc.gov/vaccines.",
+      "source": {
+        "document": "ACIP COVID-19 Vaccine Recommendations 2024-2025",
+        "date": "2024-09-01"
+      },
+      "confidence": 0.90,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "SCREEN_TOBACCO_001",
+      "screening_type": "Tobacco Use Screening and Cessation Intervention",
+      "uspstf_grade": "A",
+      "target_population": "All adults, including pregnant women",
+      "recommended_tests": [
+        { "test": "Ask about tobacco use", "frequency": "Every clinical encounter" }
+      ],
+      "intervention": {
+        "brief_counseling": "5 A's: Ask, Advise, Assess, Assist, Arrange. Even brief (3 min) physician advice increases quit rate.",
+        "most_effective_pharmacotherapy": [
+          { "agent": "Varenicline (Chantix/Champix)", "efficacy": "OR 5.1x vs. no treatment; most effective single agent. Watch for neuropsychiatric symptoms.", "duration": "12 weeks (extend to 24 for additional benefit)" },
+          { "agent": "Combination NRT (patch + gum/lozenge)", "efficacy": "OR 3.6x vs. placebo" },
+          { "agent": "Bupropion SR (Wellbutrin SR)", "efficacy": "OR 2.4x vs. placebo; useful if comorbid depression" }
+        ],
+        "source": "USPSTF 2021 + Cochrane Review 2022"
+      },
+      "gaps_detection": {
+        "trigger": "Member with documented current smoker status and no cessation counseling or medication in past 12 months",
+        "priority": "HIGH",
+        "action": "Brief counseling at every visit. Offer varenicline prescription or NRT. 1-800-QUIT-NOW (national quitline)."
+      },
+      "insurance": {
+        "medicare": "Tobacco cessation counseling covered Part B — 8 sessions/year. No copay. Varenicline covered Part D (generic available). NRT covered Part D.",
+        "uhc": "Cessation counseling covered. Varenicline and NRT covered Part D. Quitline referral covered."
+      },
+      "source": {
+        "document": "USPSTF Tobacco Smoking Cessation in Adults, Including Pregnant Persons — Final Recommendation Statement",
+        "date": "2021-01-19",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/tobacco-use-in-adults-and-pregnant-women-counseling-and-interventions"
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    }
+  ]
+}

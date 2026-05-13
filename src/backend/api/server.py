@@ -17,6 +17,7 @@ from fastapi.responses import JSONResponse
 from .routes.triage import router as triage_router
 from .routes.claims import router as claims_router
 from .routes.health import router as health_router
+from src.backend.knowledge_base.kb_search import load_decision_rules
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s — %(message)s")
 logger = logging.getLogger(__name__)
@@ -25,6 +26,8 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Arlo backend starting up")
+    rule_count = load_decision_rules()
+    logger.info(f"Knowledge base ready: {rule_count} decision rules loaded")
     yield
     logger.info("Arlo backend shutting down")
 

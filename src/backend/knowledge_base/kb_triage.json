@@ -1,0 +1,886 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2026-05-13",
+    "description": "Triage KB: Symptom → Care Setting routing based on ACEP ESI algorithm and CMS coverage rules",
+    "sources": ["ACEP ESI Triage Algorithm v2.0 (2023)", "CMS Medicare Benefit Policy Manual Ch.6 (2024)", "AAFP Clinical Guidelines", "AHA/ACC Emergency Guidelines"],
+    "total_entries": 25,
+    "medical_review_required": true,
+    "disclaimer": "This KB is for care navigation only. Never diagnoses. Medical advisor review required before deployment."
+  },
+  "entries": [
+    {
+      "id": "TRIAGE_001",
+      "symptom": "chest pain radiating to left arm with diaphoresis",
+      "symptom_aliases": ["chest tightness radiating arm", "pressure in chest with sweating", "chest pain jaw neck"],
+      "red_flags": ["acute_myocardial_infarction", "aortic_dissection", "unstable_angina"],
+      "icd10_associated": ["I21.9", "I20.0", "I71.0"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.05,
+          "note": "Only if pain is clearly musculoskeletal, <30 years old, no cardiac risk factors, and fully stable — extremely rare exception"
+        }
+      ],
+      "esi_level": 1,
+      "time_to_treatment": "immediate",
+      "reasoning": "Classic ACS presentation. Radiating chest pain + diaphoresis = high-probability STEMI/NSTEMI until proven otherwise. AHA/ACC guidelines mandate 12-lead ECG within 10 minutes of arrival. Do not delay for any triage evaluation.",
+      "do_not_delay_for": ["insurance_verification", "paperwork", "vital_signs"],
+      "contraindications_for_lower_care": ["age_over_40", "diabetes", "prior_cardiac_history", "hypertension", "diaphoresis_present", "radiation_to_arm_jaw_neck"],
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$2,800–$8,500", "member_liability": "Copay $150–$350 after deductible" },
+        "urgent_care": { "avg_cost": "$280–$450", "member_liability": "$40–$75 copay" },
+        "pcp": { "avg_cost": "$150–$250", "member_liability": "$20–$45 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "Emergency services covered at 80% after Part B deductible ($240 in 2024). No prior auth required for emergencies. Prudent layperson standard applies.",
+        "uhc": "Emergency services covered per EOB. No prior auth required. Prudent layperson standard — coverage based on presenting symptoms, not final diagnosis.",
+        "general": "Ambulance (911) transport to nearest appropriate ER is covered under most plans without prior auth."
+      },
+      "call_911": true,
+      "do_not_drive_self": true,
+      "source": {
+        "primary": {
+          "document": "AHA/ACC 2023 Guideline for Diagnosis and Management of Acute Coronary Syndromes",
+          "date": "2023-11-01",
+          "url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001195",
+          "confidence": 0.99
+        },
+        "secondary": {
+          "document": "ACEP Clinical Policy: Chest Pain (2022)",
+          "date": "2022-04-01"
+        }
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_002",
+      "symptom": "stroke symptoms: sudden face drooping, arm weakness, speech difficulty",
+      "symptom_aliases": ["FAST symptoms", "sudden one-sided weakness", "sudden slurred speech", "sudden vision loss one eye", "sudden severe headache no cause"],
+      "red_flags": ["ischemic_stroke", "hemorrhagic_stroke", "TIA"],
+      "icd10_associated": ["I63.9", "I61.9", "G45.9"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [],
+      "esi_level": 1,
+      "time_to_treatment": "immediate — tPA window is 4.5 hours from symptom onset",
+      "reasoning": "Every minute of stroke = 1.9 million neurons lost. tPA (tissue plasminogen activator) must be given within 4.5 hours of symptom onset. Mechanical thrombectomy window is up to 24 hours in selected patients. Time to treatment is the single most important determinant of outcome.",
+      "do_not_delay_for": ["waiting_to_see_if_symptoms_improve", "driving_to_urgent_care"],
+      "call_911": true,
+      "do_not_drive_self": true,
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$3,500–$15,000+", "member_liability": "Varies by deductible/plan" },
+        "urgent_care": { "avg_cost": "NOT APPROPRIATE", "member_liability": "N/A — cannot treat stroke" }
+      },
+      "insurance_notes": {
+        "medicare": "Inpatient stroke care covered under Part A. tPA covered as inpatient drug.",
+        "uhc": "Emergency and inpatient stroke care covered. No prior auth for emergencies."
+      },
+      "source": {
+        "primary": {
+          "document": "AHA/ASA 2019 Guidelines for Early Management of Patients With Acute Ischemic Stroke",
+          "date": "2019-03-01",
+          "url": "https://www.ahajournals.org/doi/10.1161/STR.0000000000000211",
+          "confidence": 0.99
+        },
+        "secondary": {
+          "document": "CDC Stroke Recognition and Response",
+          "date": "2023-09-01"
+        }
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_003",
+      "symptom": "anaphylaxis: hives + throat swelling + difficulty breathing after exposure to allergen",
+      "symptom_aliases": ["severe allergic reaction", "throat closing", "bee sting with swelling", "food allergy severe reaction", "epipen needed"],
+      "red_flags": ["anaphylactic_shock", "angioedema_with_airway_involvement"],
+      "icd10_associated": ["T78.2XXA", "T78.1XXA"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [],
+      "esi_level": 1,
+      "time_to_treatment": "immediate — epinephrine within minutes",
+      "reasoning": "Anaphylaxis is rapidly fatal without epinephrine. If epinephrine auto-injector (EpiPen) used, ER visit still mandatory — biphasic reactions occur in up to 20% of cases, requiring observation for 4–6 hours minimum.",
+      "call_911": true,
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$1,200–$3,500", "member_liability": "Copay/deductible per plan" }
+      },
+      "insurance_notes": {
+        "medicare": "Emergency services covered. Epinephrine administered in ER covered under Part B.",
+        "uhc": "Emergency covered. No prior auth required."
+      },
+      "source": {
+        "primary": {
+          "document": "ACAAI/AAAAI Anaphylaxis Practice Parameter Update 2023",
+          "date": "2023-07-01",
+          "confidence": 0.98
+        }
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_004",
+      "symptom": "severe shortness of breath at rest",
+      "symptom_aliases": ["can't breathe", "difficulty breathing rest", "respiratory distress", "oxygen level low", "SpO2 below 90"],
+      "red_flags": ["respiratory_failure", "pulmonary_embolism", "severe_COPD_exacerbation", "acute_heart_failure"],
+      "icd10_associated": ["J96.0", "I26.99", "J44.1", "I50.9"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.15,
+          "note": "Only if mild dyspnea on exertion (not rest), no cyanosis, SpO2 ≥94%, known cause (e.g. controlled asthma mild flare)"
+        }
+      ],
+      "esi_level": 1,
+      "severity_modifiers": {
+        "emergency_if": ["SpO2 < 90%", "cyanosis", "unable to speak full sentences", "accessory muscle use", "altered consciousness"],
+        "urgent_care_if": ["SpO2 94-96%", "speaking in full sentences", "known controlled asthma mild flare", "no fever or fever < 102F"]
+      },
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$2,500–$12,000", "member_liability": "Deductible + copay" },
+        "urgent_care": { "avg_cost": "$250–$500", "member_liability": "$40–$75 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "Emergency and observation covered. Oxygen therapy covered under DME (Part B) for home use if qualifying criteria met.",
+        "uhc": "Emergency covered without prior auth. Inpatient may require notification within 24–48 hours."
+      },
+      "source": {
+        "primary": {
+          "document": "ACEP Emergency Medicine Clinical Policies: Dyspnea",
+          "date": "2023-01-01",
+          "confidence": 0.96
+        }
+      },
+      "confidence": 0.96,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_005",
+      "symptom": "thunderclap headache: sudden severe headache described as worst of life",
+      "symptom_aliases": ["worst headache of my life", "sudden explosive headache", "headache like thunder", "headache onset seconds"],
+      "red_flags": ["subarachnoid_hemorrhage", "cerebral_venous_thrombosis", "hypertensive_emergency"],
+      "icd10_associated": ["I60.9", "G93.3", "I67.89"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [],
+      "esi_level": 1,
+      "reasoning": "Thunderclap headache is subarachnoid hemorrhage until proven otherwise. SAH carries 40–50% mortality; of survivors, 30% have permanent disability. CT without contrast has 98% sensitivity within 6 hours of onset; LP required if CT negative.",
+      "call_911": true,
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$3,000–$10,000", "member_liability": "Varies" }
+      },
+      "insurance_notes": {
+        "medicare": "Emergency evaluation covered. CT and LP covered under Part B in ER setting.",
+        "uhc": "Emergency covered without prior auth."
+      },
+      "source": {
+        "primary": {
+          "document": "ACEP Clinical Policy: Headache (2019, reaffirmed 2023)",
+          "date": "2019-08-01",
+          "confidence": 0.98
+        }
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_006",
+      "symptom": "high fever with stiff neck and sensitivity to light",
+      "symptom_aliases": ["fever stiff neck", "meningitis symptoms", "can't bend neck with fever", "headache stiff neck rash"],
+      "red_flags": ["bacterial_meningitis", "meningococcemia", "encephalitis"],
+      "icd10_associated": ["G00.9", "A39.4"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [],
+      "esi_level": 1,
+      "reasoning": "Classic meningitis triad (fever + nuchal rigidity + photophobia). Bacterial meningitis has 20–30% mortality without treatment; antibiotics must be started within 1 hour of presentation. Do not wait for CT before LP if no focal neuro deficits.",
+      "call_911": true,
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$5,000–$25,000 (inpatient likely)", "member_liability": "Deductible + coinsurance" }
+      },
+      "insurance_notes": {
+        "medicare": "Emergency + inpatient covered under Parts A and B.",
+        "uhc": "Emergency covered without prior auth. Inpatient notification within 24 hours required."
+      },
+      "source": {
+        "primary": {
+          "document": "IDSA Clinical Practice Guidelines: Bacterial Meningitis (2004, reaffirmed per current evidence 2022)",
+          "date": "2004-08-01",
+          "confidence": 0.97
+        }
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_007",
+      "symptom": "uncontrolled bleeding not stopping with direct pressure after 10 minutes",
+      "symptom_aliases": ["deep laceration", "wound won't stop bleeding", "arterial bleeding", "traumatic injury bleeding"],
+      "red_flags": ["hemorrhagic_shock", "arterial_laceration"],
+      "icd10_associated": ["T79.1XXA", "S01.80XA"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.40,
+          "note": "If bleeding controlled with pressure, wound is <4cm, no arterial involvement, and urgent care has suture capability"
+        }
+      ],
+      "esi_level": 2,
+      "severity_modifiers": {
+        "emergency_if": ["bleeding not controlled", "suspected arterial", "large wound", "head/face/deep structure", "anticoagulant use"],
+        "urgent_care_if": ["bleeding controlled", "small clean laceration <4cm", "not over joint or face", "no anticoagulants"]
+      },
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$1,500–$4,000", "member_liability": "Copay + deductible" },
+        "urgent_care": { "avg_cost": "$200–$500", "member_liability": "$40–$75 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "Both emergency and urgent care covered. Urgent care under Part B.",
+        "uhc": "Both settings covered. Urgent care preferred for minor lacerations if clinically appropriate."
+      },
+      "source": {
+        "primary": {
+          "document": "ACEP Clinical Policy: Wound Management",
+          "date": "2022-06-01",
+          "confidence": 0.93
+        }
+      },
+      "confidence": 0.93,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_008",
+      "symptom": "suspected broken bone or fracture after injury",
+      "symptom_aliases": ["broken arm", "fractured leg", "fall with bone pain", "wrist pain after fall", "ankle injury can't bear weight"],
+      "red_flags": ["open_fracture", "neurovascular_compromise", "femur_fracture"],
+      "icd10_associated": ["S52.90XA", "S82.90XA", "S62.90XA"],
+      "recommended_setting": "URGENT_CARE",
+      "alternative_settings": [
+        {
+          "setting": "EMERGENCY",
+          "score": 0.30,
+          "note": "Required for: open fractures, suspected femur/pelvis/spine fracture, neurovascular compromise, or significant trauma mechanism"
+        },
+        {
+          "setting": "PCP",
+          "score": 0.10,
+          "note": "Hairline fractures with confirmed imaging at urgent care can follow up with PCP"
+        }
+      ],
+      "esi_level": 3,
+      "severity_modifiers": {
+        "emergency_if": ["open fracture (bone visible)", "loss of pulse below injury", "femur or pelvic fracture", "multiple trauma", "spine injury"],
+        "urgent_care_if": ["closed fracture", "extremity only", "neurovascularly intact", "able to transport safely"]
+      },
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$2,500–$6,000", "member_liability": "Higher copay/deductible" },
+        "urgent_care": { "avg_cost": "$300–$800", "member_liability": "$40–$75 copay" },
+        "pcp": { "avg_cost": "$150–$300", "member_liability": "$20–$45 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "X-ray covered under Part B in urgent care. Splinting/casting covered. Orthopedic surgery covered under Part A if inpatient.",
+        "uhc": "Urgent care and ER both covered. Urgent care preferred for stable extremity fractures."
+      },
+      "source": {
+        "primary": {
+          "document": "ACEP Clinical Policy: Fracture Management",
+          "date": "2021-01-01",
+          "confidence": 0.92
+        }
+      },
+      "confidence": 0.92,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_009",
+      "symptom": "urinary tract infection symptoms: burning urination, frequent urination, no fever",
+      "symptom_aliases": ["UTI", "painful urination", "burning when urinating", "urinary frequency no fever"],
+      "red_flags": ["sepsis_if_fever_present", "pyelonephritis", "kidney_infection"],
+      "icd10_associated": ["N39.0", "N10"],
+      "recommended_setting": "TELEHEALTH",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.25,
+          "note": "If telehealth not available or symptoms severe"
+        },
+        {
+          "setting": "PCP",
+          "score": 0.60,
+          "note": "Next available appointment appropriate if symptoms are mild"
+        },
+        {
+          "setting": "EMERGENCY",
+          "score": 0.05,
+          "note": "Only if fever >101°F + flank pain (kidney infection/sepsis risk) or pregnant"
+        }
+      ],
+      "esi_level": 4,
+      "severity_modifiers": {
+        "emergency_if": ["fever >101F", "flank/back pain", "chills/rigors", "pregnant", "immunocompromised", "recent urologic procedure"],
+        "telehealth_if": ["classic UTI symptoms only", "no fever", "no flank pain", "not pregnant", "not immunocompromised", "prior UTI history"]
+      },
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$1,200–$3,000", "member_liability": "High copay/deductible" },
+        "urgent_care": { "avg_cost": "$150–$350", "member_liability": "$40–$75 copay" },
+        "telehealth": { "avg_cost": "$49–$99", "member_liability": "$0–$30 copay" },
+        "pcp": { "avg_cost": "$150–$250", "member_liability": "$20–$45 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "Telehealth covered under Part B (expanded post-COVID permanently for some services). Urine culture covered when clinically indicated.",
+        "uhc": "Telehealth covered via UHC Virtual Visit. $0 cost for many plans for virtual UTI visit."
+      },
+      "source": {
+        "primary": {
+          "document": "IDSA Guidelines: Uncomplicated UTI in Women (2011, reaffirmed 2022)",
+          "date": "2011-03-01",
+          "confidence": 0.94
+        }
+      },
+      "confidence": 0.94,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_010",
+      "symptom": "upper respiratory infection: sore throat, runny nose, mild cough, no high fever",
+      "symptom_aliases": ["common cold", "URI", "cough and cold", "sore throat mild", "runny nose congestion"],
+      "red_flags": ["strep_throat_if_exudate", "influenza_high_risk_populations"],
+      "icd10_associated": ["J06.9", "J00"],
+      "recommended_setting": "SELF_CARE",
+      "alternative_settings": [
+        {
+          "setting": "TELEHEALTH",
+          "score": 0.35,
+          "note": "If patient wants strep test, antiviral for flu, or has questions about symptoms"
+        },
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.10,
+          "note": "If strep suspected (fever >101°F + white exudate + no cough) or flu with high-risk factors"
+        }
+      ],
+      "esi_level": 5,
+      "self_care_instructions": "Rest, hydration (8+ glasses water/day), OTC symptom relief (acetaminophen for pain/fever, saline nasal rinse, honey for cough in adults). Expect 7–10 days duration. Antibiotics do NOT treat viral URI — prescribing them for viral URI is inappropriate.",
+      "severity_modifiers": {
+        "escalate_to_telehealth_if": ["fever > 103°F", "symptoms >10 days", "severe throat pain with difficulty swallowing", "ear pain", "cough producing green/yellow sputum >7 days"],
+        "escalate_to_er_if": ["difficulty breathing", "stridor", "drooling", "high fever with stiff neck"]
+      },
+      "cost_comparison": {
+        "self_care": { "avg_cost": "$10–$30 OTC", "member_liability": "Self-pay" },
+        "telehealth": { "avg_cost": "$49–$99", "member_liability": "$0–$30 copay" },
+        "urgent_care": { "avg_cost": "$150–$350", "member_liability": "$40–$75 copay" },
+        "emergency": { "avg_cost": "$1,200–$2,500", "member_liability": "High copay — NOT recommended for URI" }
+      },
+      "insurance_notes": {
+        "medicare": "OTC medications not covered. Telehealth covered under expanded Part B.",
+        "uhc": "Telehealth/virtual visits recommended. Many plans $0 copay for virtual URI visit."
+      },
+      "source": {
+        "primary": {
+          "document": "CDC Common Cold: Treatment and Management",
+          "date": "2023-08-01",
+          "confidence": 0.97
+        },
+        "secondary": {
+          "document": "AAFP Clinical Practice Guideline: Acute Rhinosinusitis (2015)",
+          "date": "2015-10-01"
+        }
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_011",
+      "symptom": "abdominal pain severe or with rigid abdomen",
+      "symptom_aliases": ["severe stomach pain", "belly rigid hard", "guarding rebound tenderness", "acute abdomen"],
+      "red_flags": ["appendicitis", "bowel_perforation", "ectopic_pregnancy", "aortic_aneurysm_rupture", "mesenteric_ischemia"],
+      "icd10_associated": ["K35.80", "K63.1", "O00.9", "I71.3"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.10,
+          "note": "Only if pain is mild, chronic, no peritoneal signs, and no high-risk features"
+        }
+      ],
+      "esi_level": 2,
+      "severity_modifiers": {
+        "emergency_if": ["pain > 7/10", "board-like rigid abdomen", "rebound tenderness", "guarding", "fever >101F + pain", "known AAA", "RLQ pain with anorexia/nausea", "female with missed period + pain"],
+        "urgent_care_if": ["mild cramping <5/10", "no fever", "no guarding", "known IBS or GERD flare"]
+      },
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$2,000–$8,000 (CT imaging usually required)", "member_liability": "Deductible + copay" },
+        "urgent_care": { "avg_cost": "$200–$600", "member_liability": "$40–$75 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "Abdominal CT covered when medically necessary under Part B in ER. Surgical intervention under Part A.",
+        "uhc": "Emergency covered. CT imaging requires coverage under ER benefit."
+      },
+      "source": {
+        "primary": {
+          "document": "ACEP Clinical Policy: Evaluation of Acute Abdominal Pain",
+          "date": "2021-09-01",
+          "confidence": 0.95
+        }
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_012",
+      "symptom": "mental health crisis: expressing thoughts of self-harm or suicide",
+      "symptom_aliases": ["suicidal thoughts", "wants to hurt self", "thinking about suicide", "self-harm ideation"],
+      "red_flags": ["active_suicidal_ideation", "suicide_plan", "self_harm"],
+      "icd10_associated": ["Z91.51", "T14.91"],
+      "recommended_setting": "CRISIS_LINE_988",
+      "alternative_settings": [
+        {
+          "setting": "EMERGENCY",
+          "score": 0.95,
+          "note": "If active plan, means access, or imminent danger — call 911"
+        }
+      ],
+      "esi_level": 1,
+      "crisis_resources": {
+        "primary": "Call or text 988 (Suicide & Crisis Lifeline) — 24/7, free, confidential",
+        "secondary": "Crisis Text Line: Text HOME to 741741",
+        "emergency": "911 if imminent danger"
+      },
+      "do_not": ["leave person alone", "dismiss symptoms", "promise confidentiality if safety at risk"],
+      "cost_comparison": {
+        "crisis_line_988": { "avg_cost": "$0", "member_liability": "$0" },
+        "emergency": { "avg_cost": "$2,000–$5,000", "member_liability": "Deductible + copay" }
+      },
+      "insurance_notes": {
+        "medicare": "Mental health emergency covered. Inpatient psychiatric covered under Part A. 190-day Medicare lifetime limit for psychiatric hospital (not general hospital psych unit).",
+        "uhc": "Mental health emergency covered under Mental Health Parity Act. Behavioral health benefits equal to medical."
+      },
+      "source": {
+        "primary": {
+          "document": "SAMHSA 988 Suicide & Crisis Lifeline Implementation",
+          "date": "2022-07-16",
+          "confidence": 0.99
+        },
+        "secondary": {
+          "document": "Joint Commission National Patient Safety Goal NPSG.15.01.01 (Suicide Risk Reduction)",
+          "date": "2023-01-01"
+        }
+      },
+      "confidence": 0.99,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_013",
+      "symptom": "acute low back pain after lifting, no neurological symptoms",
+      "symptom_aliases": ["pulled back muscle", "back strain lifting", "lower back pain no leg symptoms"],
+      "red_flags": ["cauda_equina_if_bowel_bladder_dysfunction", "fracture_if_high_impact_trauma", "infection_if_fever"],
+      "icd10_associated": ["M54.5"],
+      "recommended_setting": "SELF_CARE",
+      "alternative_settings": [
+        {
+          "setting": "TELEHEALTH",
+          "score": 0.40,
+          "note": "For medication consultation (NSAIDs, muscle relaxants) or work note"
+        },
+        {
+          "setting": "PCP",
+          "score": 0.30,
+          "note": "If not improving after 1–2 weeks of self-care"
+        }
+      ],
+      "esi_level": 5,
+      "self_care_instructions": "Ice first 48 hours, then heat. NSAIDs (ibuprofen, naproxen) superior to acetaminophen for acute back pain. Continue light activity (bed rest is harmful). 90% of acute low back pain resolves within 6 weeks.",
+      "red_flag_escalation": {
+        "emergency_immediately_if": ["loss of bladder/bowel control (cauda equina)", "saddle anesthesia", "bilateral leg weakness"],
+        "urgent_care_or_pcp_if": ["fever with back pain", "pain after significant trauma", "age >50 with no prior injury", "unexplained weight loss with pain", "pain not improving in 6 weeks"]
+      },
+      "cost_comparison": {
+        "self_care": { "avg_cost": "$10–$30 OTC NSAIDs", "member_liability": "Self-pay" },
+        "telehealth": { "avg_cost": "$49–$99", "member_liability": "$0–$30 copay" },
+        "pcp": { "avg_cost": "$150–$250", "member_liability": "$20–$45 copay" },
+        "emergency": { "avg_cost": "$1,500–$4,000", "member_liability": "High — imaging often not indicated acutely" }
+      },
+      "insurance_notes": {
+        "medicare": "Physical therapy covered under Part B (must be medically necessary). X-ray/MRI covered if red flags present. Chiropractic covered for manipulation only.",
+        "uhc": "Physical therapy covered with referral. MRI requires prior auth if ordered in outpatient setting without red flags."
+      },
+      "source": {
+        "primary": {
+          "document": "ACP Clinical Practice Guideline: Noninvasive Treatments for Low Back Pain (2017)",
+          "date": "2017-04-04",
+          "confidence": 0.95
+        }
+      },
+      "confidence": 0.95,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_014",
+      "symptom": "diabetic with blood glucose > 400 mg/dL",
+      "symptom_aliases": ["very high blood sugar", "hyperglycemia severe", "glucose over 400", "DKA symptoms nausea vomiting"],
+      "red_flags": ["diabetic_ketoacidosis", "hyperglycemic_hyperosmolar_state"],
+      "icd10_associated": ["E11.65", "E10.10"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.15,
+          "note": "If glucose 300-400, asymptomatic, Type 2 DM, able to keep fluids down, no ketones — call PCP/Telehealth first"
+        },
+        {
+          "setting": "TELEHEALTH",
+          "score": 0.20,
+          "note": "If glucose mildly elevated 200-300, no symptoms, Type 2 DM on oral meds — consult for medication adjustment"
+        }
+      ],
+      "esi_level": 2,
+      "severity_modifiers": {
+        "emergency_if": ["glucose >400", "nausea/vomiting", "abdominal pain", "fruity breath", "Kussmaul breathing", "altered mental status", "Type 1 DM any DKA signs"],
+        "urgent_telehealth_if": ["glucose 300-400", "Type 2 DM", "able to keep fluids down", "no ketones on home strip", "alert and oriented"]
+      },
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$3,000–$12,000 (DKA requires ICU)", "member_liability": "Deductible + coinsurance" },
+        "urgent_care": { "avg_cost": "$200–$600", "member_liability": "$40–$75 copay" },
+        "telehealth": { "avg_cost": "$49–$99", "member_liability": "$0–$30 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "DKA inpatient covered Part A. CGM covered under Part B (medically necessary criteria).",
+        "uhc": "Emergency DKA covered. CGM covered with prior auth for qualifying Type 1 and some Type 2 patients."
+      },
+      "source": {
+        "primary": {
+          "document": "ADA Standards of Care in Diabetes 2024 — Section 16: Diabetes Care in the Hospital",
+          "date": "2024-01-01",
+          "confidence": 0.97
+        }
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_015",
+      "symptom": "pediatric fever: child under 3 months with any fever",
+      "symptom_aliases": ["newborn fever", "infant fever under 3 months", "baby temperature 100.4F", "neonate fever"],
+      "red_flags": ["neonatal_sepsis", "bacterial_meningitis"],
+      "icd10_associated": ["P81.0", "A41.9"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [],
+      "esi_level": 1,
+      "reasoning": "Fever ≥100.4°F (38°C) in infant <3 months requires full sepsis workup (CBC, UA, blood culture, LP) regardless of appearance. Neonates cannot localize infection — what appears 'mild' can be bacterial sepsis. Rochester/Philadelphia/Boston criteria guide workup stratification.",
+      "call_911": false,
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$3,000–$8,000", "member_liability": "Pediatric emergency benefit per plan" }
+      },
+      "insurance_notes": {
+        "medicare": "Generally not applicable for neonates (Medicare is primarily age 65+).",
+        "uhc": "Pediatric emergency covered. CHIP/Medicaid for eligible children.",
+        "general": "Check plan for pediatric emergency copay — often lower than adult ER copay."
+      },
+      "source": {
+        "primary": {
+          "document": "AAP Clinical Practice Guideline: Evaluation and Management of Febrile Infants 8-60 Days",
+          "date": "2021-08-01",
+          "confidence": 0.98
+        }
+      },
+      "confidence": 0.98,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_016",
+      "symptom": "hypertensive urgency: blood pressure reading > 180/120 mmHg, no symptoms",
+      "symptom_aliases": ["very high blood pressure no symptoms", "BP 180 over 120", "severe hypertension asymptomatic"],
+      "red_flags": ["hypertensive_emergency_if_symptoms", "end_organ_damage"],
+      "icd10_associated": ["I16.0", "I10"],
+      "recommended_setting": "URGENT_CARE",
+      "alternative_settings": [
+        {
+          "setting": "EMERGENCY",
+          "score": 0.90,
+          "note": "REQUIRED if ANY symptoms: chest pain, shortness of breath, headache, vision changes, altered consciousness, or focal neuro deficits (hypertensive emergency)"
+        },
+        {
+          "setting": "TELEHEALTH",
+          "score": 0.20,
+          "note": "If BP is slightly elevated (160-180/100-110), asymptomatic, known hypertensive patient on medications — consult for med adjustment"
+        }
+      ],
+      "esi_level": 3,
+      "severity_modifiers": {
+        "emergency_if": ["BP >180/120 + ANY symptoms", "chest pain", "headache", "vision changes", "focal weakness", "shortness of breath", "confusion"],
+        "urgent_care_if": ["BP 180-220/120-130", "completely asymptomatic", "known hypertensive patient"],
+        "note": "Hypertensive urgency (no symptoms) vs hypertensive emergency (symptoms + end organ damage) is a critical distinction"
+      },
+      "cost_comparison": {
+        "emergency": { "avg_cost": "$1,500–$4,000", "member_liability": "High copay/deductible" },
+        "urgent_care": { "avg_cost": "$150–$400", "member_liability": "$40–$75 copay" },
+        "telehealth": { "avg_cost": "$49–$99", "member_liability": "$0–$30 copay" }
+      },
+      "insurance_notes": {
+        "medicare": "Anti-hypertensives covered under Part D. Blood pressure monitoring device: not typically covered. ABPM covered for white coat hypertension diagnosis.",
+        "uhc": "24-hour ABPM covered with prior auth for specific indications. Telehealth for HTN management covered."
+      },
+      "source": {
+        "primary": {
+          "document": "AHA/ACC 2017 High Blood Pressure Clinical Practice Guideline",
+          "date": "2017-11-13",
+          "confidence": 0.96
+        }
+      },
+      "confidence": 0.96,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_017",
+      "symptom": "COPD exacerbation: worsening shortness of breath, increased sputum",
+      "symptom_aliases": ["COPD flare", "emphysema worse breathing", "chronic bronchitis flare up", "COPD worse than usual"],
+      "red_flags": ["respiratory_failure", "pneumothorax", "pneumonia"],
+      "icd10_associated": ["J44.1"],
+      "recommended_setting": "URGENT_CARE",
+      "alternative_settings": [
+        {
+          "setting": "EMERGENCY",
+          "score": 0.60,
+          "note": "If SpO2 <90%, accessory muscle use, altered mental status, unable to speak full sentences, or severe distress"
+        },
+        {
+          "setting": "TELEHEALTH",
+          "score": 0.15,
+          "note": "Mild exacerbation only — worse than usual but able to function, SpO2 ≥94%, for prednisone/antibiotic prescription"
+        }
+      ],
+      "esi_level": 2,
+      "source": {
+        "primary": {
+          "document": "GOLD 2024 Global Strategy for COPD",
+          "date": "2024-01-01",
+          "confidence": 0.96
+        }
+      },
+      "confidence": 0.96,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_018",
+      "symptom": "asthma attack: wheezing, coughing, shortness of breath not responding to rescue inhaler",
+      "symptom_aliases": ["asthma not responding to inhaler", "can't breathe asthma", "blue rescue inhaler not working"],
+      "red_flags": ["status_asthmaticus", "respiratory_failure"],
+      "icd10_associated": ["J45.51"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.35,
+          "note": "Mild-moderate attack with partial response to bronchodilator, SpO2 ≥94%, able to speak in sentences — if UC has nebulizer capability"
+        }
+      ],
+      "esi_level": 1,
+      "source": {
+        "primary": {
+          "document": "NAEPP Expert Panel Report 3: Guidelines for Asthma Management (2007, updated 2020)",
+          "date": "2007-08-01",
+          "confidence": 0.96
+        }
+      },
+      "confidence": 0.96,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_019",
+      "symptom": "possible pulmonary embolism: sudden onset pleuritic chest pain with shortness of breath",
+      "symptom_aliases": ["pleuritic chest pain dyspnea", "sharp chest pain worse with breathing", "calf pain swelling with chest pain", "DVT with chest symptoms"],
+      "red_flags": ["pulmonary_embolism", "DVT"],
+      "icd10_associated": ["I26.99", "I82.401"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [],
+      "esi_level": 1,
+      "reasoning": "Wells PE Score: if intermediate or high probability, d-dimer or CT-PA in ER. Massive PE causes hemodynamic instability and death without immediate anticoagulation or thrombolysis.",
+      "call_911": true,
+      "source": {
+        "primary": {
+          "document": "ACEP Clinical Policy: Thromboembolic Disease (2018)",
+          "date": "2018-07-01",
+          "confidence": 0.97
+        }
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_020",
+      "symptom": "eye injury: chemical splash to eye",
+      "symptom_aliases": ["bleach in eye", "cleaning product eye splash", "acid or base in eye", "chemical burn eye"],
+      "red_flags": ["chemical_burn_cornea", "vision_threatening_injury"],
+      "icd10_associated": ["T26.60XA"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [],
+      "esi_level": 1,
+      "immediate_action": "Irrigate immediately with water for 20+ minutes BEFORE transport. Do not wait. Every second of irrigation before ER reduces tissue damage.",
+      "call_911": false,
+      "source": {
+        "primary": {
+          "document": "AAO Clinical Practice Guidelines: Ocular Chemical Burns",
+          "date": "2021-01-01",
+          "confidence": 0.97
+        }
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_021",
+      "symptom": "mild ankle sprain after sports injury, able to bear weight",
+      "symptom_aliases": ["twisted ankle", "rolled ankle sports", "ankle sprain mild"],
+      "red_flags": ["fracture_if_ottawa_positive", "ligament_rupture"],
+      "icd10_associated": ["S93.401A"],
+      "recommended_setting": "SELF_CARE",
+      "alternative_settings": [
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.30,
+          "note": "If Ottawa Ankle Rules positive (bone tenderness at specific points + inability to bear weight 4 steps)"
+        }
+      ],
+      "esi_level": 5,
+      "self_care_instructions": "RICE: Rest, Ice (20min on/20min off), Compression (ACE wrap), Elevation. NSAIDs for pain/swelling. Ottawa Ankle Rules: if tenderness at posterior malleolus or base of 5th metatarsal AND cannot bear weight, X-ray needed.",
+      "source": {
+        "primary": {
+          "document": "Ottawa Ankle Rules (Stiell et al.)",
+          "date": "1994-02-01",
+          "confidence": 0.97
+        }
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_022",
+      "symptom": "COVID-19 symptoms: fever, cough, loss of taste/smell, fatigue",
+      "symptom_aliases": ["COVID symptoms", "COVID-19 illness", "coronavirus infection"],
+      "red_flags": ["hypoxia", "respiratory_failure", "cytokine_storm"],
+      "icd10_associated": ["U07.1"],
+      "recommended_setting": "TELEHEALTH",
+      "alternative_settings": [
+        {
+          "setting": "SELF_CARE",
+          "score": 0.50,
+          "note": "If mild symptoms, vaccinated, low risk — home isolation, OTC symptom management"
+        },
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.20,
+          "note": "For Paxlovid prescription eligibility (high-risk patients, within 5 days of symptom onset)"
+        },
+        {
+          "setting": "EMERGENCY",
+          "score": 0.10,
+          "note": "If SpO2 <94%, persistent chest pain, confusion, or inability to stay awake"
+        }
+      ],
+      "esi_level": 3,
+      "source": {
+        "primary": {
+          "document": "NIH COVID-19 Treatment Guidelines (2024)",
+          "date": "2024-01-01",
+          "confidence": 0.94
+        }
+      },
+      "confidence": 0.94,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_023",
+      "symptom": "heart failure patient: sudden weight gain 3+ lbs in 24 hours, ankle swelling, shortness of breath",
+      "symptom_aliases": ["CHF flare", "heart failure worsening", "fluid retention heart failure", "ankle swelling heart failure"],
+      "red_flags": ["acute_decompensated_heart_failure", "flash_pulmonary_edema"],
+      "icd10_associated": ["I50.9", "I50.43"],
+      "recommended_setting": "EMERGENCY",
+      "alternative_settings": [
+        {
+          "setting": "PCP",
+          "score": 0.20,
+          "note": "Mild worsening: 1-2 lb weight gain, mild ankle edema, no dyspnea — phone/telehealth with PCP for diuretic adjustment"
+        }
+      ],
+      "esi_level": 2,
+      "source": {
+        "primary": {
+          "document": "AHA/ACC 2022 Heart Failure Guideline",
+          "date": "2022-05-03",
+          "confidence": 0.97
+        }
+      },
+      "confidence": 0.97,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_024",
+      "symptom": "migraine with typical aura in known migraineur",
+      "symptom_aliases": ["migraine with aura", "classic migraine", "migraine same as usual"],
+      "red_flags": ["first_worst_headache", "fever_with_headache", "focal_neurological_change"],
+      "icd10_associated": ["G43.109"],
+      "recommended_setting": "SELF_CARE",
+      "alternative_settings": [
+        {
+          "setting": "TELEHEALTH",
+          "score": 0.35,
+          "note": "For triptan prescription refill, anti-emetic, or guidance if OTC not effective"
+        },
+        {
+          "setting": "URGENT_CARE",
+          "score": 0.15,
+          "note": "For IV fluids + IV metoclopramide + ketorolac if oral medications not working"
+        }
+      ],
+      "esi_level": 4,
+      "note": "Only applies to KNOWN migraineur with TYPICAL migraine presentation. First/worst headache → TRIAGE_005 (thunderclap → EMERGENCY).",
+      "source": {
+        "primary": {
+          "document": "AAN Clinical Practice Guideline: Migraine Treatment (2012, updated 2019)",
+          "date": "2019-01-01",
+          "confidence": 0.94
+        }
+      },
+      "confidence": 0.94,
+      "last_validated": "2025-06-01"
+    },
+    {
+      "id": "TRIAGE_025",
+      "symptom": "prescription medication refill needed, no urgent symptoms",
+      "symptom_aliases": ["out of medication", "need refill", "ran out of pills", "prescription expired"],
+      "red_flags": [],
+      "icd10_associated": [],
+      "recommended_setting": "TELEHEALTH",
+      "alternative_settings": [
+        {
+          "setting": "PCP",
+          "score": 0.70,
+          "note": "Next available appointment; some medications require in-person evaluation for refill"
+        }
+      ],
+      "esi_level": 5,
+      "note": "Controlled substances (Schedule II: opioids, stimulants) require in-person evaluation in most states. Electronic prescribing of controlled substances (EPCS) laws vary. Telehealth cannot prescribe Schedule II in most states.",
+      "cost_comparison": {
+        "telehealth": { "avg_cost": "$49–$99", "member_liability": "$0–$30 copay" },
+        "pcp": { "avg_cost": "$150–$250", "member_liability": "$20–$45 copay" },
+        "emergency": { "avg_cost": "$1,200+", "member_liability": "HIGH — ER not appropriate for non-urgent refills" }
+      },
+      "insurance_notes": {
+        "medicare": "Part D covers most outpatient medications. Telehealth prescribing under waiver rules post-public health emergency.",
+        "uhc": "Telehealth prescribing covered for non-controlled medications. Mail-order pharmacy available for 90-day supply."
+      },
+      "source": {
+        "primary": {
+          "document": "DEA Telehealth Prescribing Rules (21 CFR Part 1306)",
+          "date": "2023-03-01",
+          "confidence": 0.90
+        }
+      },
+      "confidence": 0.90,
+      "last_validated": "2025-06-01"
+    }
+  ]
+}

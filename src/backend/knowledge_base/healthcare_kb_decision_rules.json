@@ -1,0 +1,867 @@
+[
+  {
+    "id": "EMERGENCY_STROKE_001",
+    "category": "emergency",
+    "symptom_or_topic": "Sudden face drooping, facial numbness, or weakness on one side",
+    "decision": "CALL_911",
+    "reasoning": "Sudden unilateral facial weakness or numbness is a classic stroke warning sign. Stroke treatment is time-critical; emergency services should be activated immediately.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CDC - Signs and Symptoms of Stroke",
+        "url": "https://www.cdc.gov/stroke/signs-symptoms/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_STROKE_002",
+    "category": "emergency",
+    "symptom_or_topic": "Sudden arm or leg weakness or numbness, especially on one side",
+    "decision": "CALL_911",
+    "reasoning": "Sudden unilateral arm or leg weakness or numbness may indicate acute stroke and requires immediate emergency response.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CDC - Signs and Symptoms of Stroke",
+        "url": "https://www.cdc.gov/stroke/signs-symptoms/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_STROKE_003",
+    "category": "emergency",
+    "symptom_or_topic": "Sudden confusion, trouble speaking, or difficulty understanding speech",
+    "decision": "CALL_911",
+    "reasoning": "Acute speech or comprehension difficulty is a stroke warning sign. Emergency activation is required because delay can reduce eligibility for time-sensitive stroke therapy.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CDC - Signs and Symptoms of Stroke",
+        "url": "https://www.cdc.gov/stroke/signs-symptoms/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_STROKE_004",
+    "category": "emergency",
+    "symptom_or_topic": "Sudden trouble seeing in one or both eyes",
+    "decision": "CALL_911",
+    "reasoning": "Sudden vision loss or visual disturbance can be a stroke symptom and should be treated as a medical emergency.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CDC - Signs and Symptoms of Stroke",
+        "url": "https://www.cdc.gov/stroke/signs-symptoms/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_STROKE_005",
+    "category": "emergency",
+    "symptom_or_topic": "Sudden trouble walking, dizziness, loss of balance, or loss of coordination",
+    "decision": "CALL_911",
+    "reasoning": "Sudden gait disturbance, dizziness, balance loss, or coordination loss may represent acute stroke and requires immediate emergency evaluation.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CDC - Signs and Symptoms of Stroke",
+        "url": "https://www.cdc.gov/stroke/signs-symptoms/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_STROKE_006",
+    "category": "emergency",
+    "symptom_or_topic": "Sudden severe headache with no known cause",
+    "decision": "CALL_911",
+    "reasoning": "A sudden severe headache without known cause can be a stroke warning sign, including possible hemorrhagic stroke.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CDC - Signs and Symptoms of Stroke",
+        "url": "https://www.cdc.gov/stroke/signs-symptoms/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_ABDOMINAL_001",
+    "category": "emergency",
+    "symptom_or_topic": "Severe abdominal pain after trauma, accident, or injury",
+    "decision": "CALL_911",
+    "reasoning": "Severe abdominal pain associated with trauma can indicate internal injury or bleeding and needs emergency medical assistance.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Abdominal pain: When to see a doctor",
+        "url": "https://www.mayoclinic.org/symptoms/abdominal-pain/basics/when-to-see-doctor/sym-20050728",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_ABDOMINAL_002",
+    "category": "emergency",
+    "symptom_or_topic": "Severe abdominal pain with chest pressure or chest pain",
+    "decision": "CALL_911",
+    "reasoning": "Abdominal pain with chest pressure or chest pain may represent cardiac or other life-threatening disease and requires emergency response.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Abdominal pain: When to see a doctor",
+        "url": "https://www.mayoclinic.org/symptoms/abdominal-pain/basics/when-to-see-doctor/sym-20050728",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "ACEP - Know When to Go to the ER",
+        "url": "https://www.emergencyphysicians.org/article/know-when-to-go/know-when-to-go-overview",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_ABDOMINAL_003",
+    "category": "emergency",
+    "symptom_or_topic": "Abdominal pain with black stool, bloody stool, vomiting blood, or blood in urine",
+    "decision": "GO_TO_ER",
+    "reasoning": "Abdominal pain with evidence of gastrointestinal or urinary bleeding may indicate serious internal bleeding or acute disease requiring emergency evaluation.",
+    "confidence": 0.96,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Abdominal pain in adults",
+        "url": "https://www.mayoclinic.org/symptom-checker/abdominal-pain-in-adults-adult/related-factors/itt-20009075",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_ABDOMINAL_004",
+    "category": "emergency",
+    "symptom_or_topic": "Abdominal pain with swollen and tender abdomen",
+    "decision": "GO_TO_ER",
+    "reasoning": "A swollen, tender abdomen with pain can indicate peritonitis, obstruction, internal bleeding, or other acute abdominal emergency.",
+    "confidence": 0.96,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Abdominal pain in adults",
+        "url": "https://www.mayoclinic.org/symptom-checker/abdominal-pain-in-adults-adult/related-factors/itt-20009075",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_ABDOMINAL_005",
+    "category": "emergency",
+    "symptom_or_topic": "Abdominal pain with high fever or persistent vomiting",
+    "decision": "GO_TO_ER",
+    "reasoning": "Abdominal pain with high fever or persistent vomiting can signal serious infection, obstruction, dehydration, or another condition needing emergency care.",
+    "confidence": 0.95,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Abdominal pain in adults",
+        "url": "https://www.mayoclinic.org/symptom-checker/abdominal-pain-in-adults-adult/related-factors/itt-20009075",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_CHEST_001",
+    "category": "emergency",
+    "symptom_or_topic": "Chest pain or upper abdominal pressure lasting two minutes or more",
+    "decision": "CALL_911",
+    "reasoning": "Chest or upper abdominal pressure lasting two minutes or more can indicate heart attack or another emergency condition.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "ACEP - Know When to Go to the ER",
+        "url": "https://www.emergencyphysicians.org/article/know-when-to-go/know-when-to-go-overview",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_CHEST_002",
+    "category": "emergency",
+    "symptom_or_topic": "Chest pain with nausea, sweating, dizziness, or shortness of breath",
+    "decision": "CALL_911",
+    "reasoning": "Chest pain with autonomic symptoms or shortness of breath is concerning for heart attack or other life-threatening cardiopulmonary disease.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "MedlinePlus - Chest Pain",
+        "url": "https://medlineplus.gov/chestpain.html",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "MedlinePlus - Warning signs and symptoms of heart disease",
+        "url": "https://medlineplus.gov/ency/patientinstructions/000775.htm",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_BREATHING_001",
+    "category": "emergency",
+    "symptom_or_topic": "Difficulty breathing or shortness of breath",
+    "decision": "GO_TO_ER",
+    "reasoning": "Difficulty breathing or shortness of breath may reflect serious respiratory, cardiac, allergic, or thromboembolic disease and needs emergency evaluation.",
+    "confidence": 0.96,
+    "sources": [
+      {
+        "title": "ACEP - Know When to Go to the ER",
+        "url": "https://www.emergencyphysicians.org/article/know-when-to-go/know-when-to-go-overview",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_NEURO_001",
+    "category": "emergency",
+    "symptom_or_topic": "Fainting, sudden dizziness, sudden weakness, or difficulty waking",
+    "decision": "GO_TO_ER",
+    "reasoning": "Fainting, sudden dizziness, sudden weakness, or reduced arousability may indicate neurologic, cardiac, metabolic, or other emergency conditions.",
+    "confidence": 0.95,
+    "sources": [
+      {
+        "title": "ACEP - Know When to Go to the ER",
+        "url": "https://www.emergencyphysicians.org/article/know-when-to-go/know-when-to-go-overview",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_CLOT_001",
+    "category": "emergency",
+    "symptom_or_topic": "Difficult or painful breathing with chest pain or tightness",
+    "decision": "GO_TO_ER",
+    "reasoning": "Breathing difficulty with chest pain or tightness can indicate pulmonary embolism or another life-threatening cardiopulmonary emergency.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Blood clots: When to see a doctor",
+        "url": "https://www.mayoclinic.org/symptoms/blood-clots/basics/when-to-see-doctor/sym-20050850",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_CLOT_002",
+    "category": "emergency",
+    "symptom_or_topic": "Coughing bloody sputum with fast heartbeat or lightheadedness",
+    "decision": "GO_TO_ER",
+    "reasoning": "Coughing blood with tachycardia or lightheadedness may indicate pulmonary embolism or severe cardiopulmonary disease.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Blood clots: When to see a doctor",
+        "url": "https://www.mayoclinic.org/symptoms/blood-clots/basics/when-to-see-doctor/sym-20050850",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "URGENT_CLOT_003",
+    "category": "urgent",
+    "symptom_or_topic": "Arm or leg swelling, redness, warmth, or pain suggestive of DVT without breathing symptoms",
+    "decision": "GO_TO_URGENT_CARE",
+    "reasoning": "Possible deep vein thrombosis should be assessed promptly to prevent progression to pulmonary embolism, even if pulmonary symptoms are absent.",
+    "confidence": 0.94,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Blood clots: When to see a doctor",
+        "url": "https://www.mayoclinic.org/symptoms/blood-clots/basics/when-to-see-doctor/sym-20050850",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "Mayo Clinic - Deep vein thrombosis: Symptoms and causes",
+        "url": "https://www.mayoclinic.org/diseases-conditions/deep-vein-thrombosis/symptoms-causes/syc-20352557",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_SEPSIS_001",
+    "category": "emergency",
+    "symptom_or_topic": "Known or suspected infection that is getting worse with confusion, shortness of breath, extreme pain, clammy skin, fever, shivering, or weak pulse",
+    "decision": "GO_TO_ER",
+    "reasoning": "Sepsis is a life-threatening medical emergency; infection plus systemic warning signs requires immediate medical evaluation.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CDC - About Sepsis",
+        "url": "https://www.cdc.gov/sepsis/about/index.html",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Protect Yourself And Your Family From Sepsis",
+        "url": "https://www.cdc.gov/sepsis/media/pdfs/Consumer-fact-sheet-protect-yourself-and-your-family-P.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "EMERGENCY_ANAPHYLAXIS_001",
+    "category": "emergency",
+    "symptom_or_topic": "Allergic reaction with throat, face, lip, or tongue swelling; wheezing; breathing difficulty; faintness; or severe multi-system symptoms",
+    "decision": "CALL_911",
+    "reasoning": "Signs of anaphylaxis require immediate epinephrine when available and emergency medical services because untreated anaphylaxis can be fatal.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Anaphylaxis: First aid",
+        "url": "https://www.mayoclinic.org/first-aid/first-aid-anaphylaxis/basics/art-20056608",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Recognizing and Responding to Anaphylaxis",
+        "url": "https://www.cdc.gov/vaccines/covid-19/downloads/recognizing-responding-to-anaphylaxis-508.pdf",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "FARE - Recognizing and Responding to a Reaction",
+        "url": "https://www.foodallergy.org/resources/recognizing-and-responding-reaction",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_CMS_NCD_001",
+    "category": "insurance",
+    "symptom_or_topic": "Medicare service has an applicable National Coverage Determination",
+    "decision": "CHECK_NCD",
+    "reasoning": "A National Coverage Determination is a national Medicare coverage rule. If an NCD exists, it controls whether Medicare covers the item or service nationally.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Medicare Coverage Determination Process",
+        "url": "https://www.cms.gov/medicare/coverage/determination-process",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CMS - MCD Search",
+        "url": "https://www.cms.gov/medicare-coverage-database/view/ncd.aspx",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_CMS_LCD_002",
+    "category": "insurance",
+    "symptom_or_topic": "Medicare service has no applicable NCD but may be governed by MAC policy",
+    "decision": "CHECK_LCD",
+    "reasoning": "A Local Coverage Determination is a Medicare Administrative Contractor determination about whether an item or service is covered on a contractor-wide basis.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Local Coverage Determinations",
+        "url": "https://www.cms.gov/medicare/coverage/determination-process/local",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CMS - Medicare Program Integrity Manual, Chapter 13",
+        "url": "https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/pim83c13.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_CMS_CED_003",
+    "category": "insurance",
+    "symptom_or_topic": "Medicare item or service covered only under Coverage with Evidence Development",
+    "decision": "COVERED_ONLY_IN_APPROVED_STUDY",
+    "reasoning": "CMS may cover certain items or services only in the context of a clinical study when an NCD requires Coverage with Evidence Development.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Coverage with Evidence Development",
+        "url": "https://www.cms.gov/medicare/coverage/evidence",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_004",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department blepharoplasty, blepharoptosis repair, or brow ptosis repair",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS requires prior authorization for specified hospital outpatient department eyelid and brow procedures to confirm medical necessity before payment.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CMS - Final List of Outpatient Department Services That Require Prior Authorization",
+        "url": "https://www.cms.gov/files/document/opd-services-require-prior-authorization.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_005",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department botulinum toxin injections",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS lists botulinum toxin injections among hospital outpatient department services requiring prior authorization.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_006",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department panniculectomy",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS lists panniculectomy among hospital outpatient department services requiring prior authorization.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_007",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department rhinoplasty",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS lists rhinoplasty among hospital outpatient department services requiring prior authorization.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_008",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department vein ablation",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS lists vein ablation among hospital outpatient department services requiring prior authorization.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_009",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department implanted spinal neurostimulator",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS added implanted spinal neurostimulators to the hospital outpatient department prior authorization program for service dates on or after July 1, 2021.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_010",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department cervical fusion with disc removal",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS added cervical fusion with disc removal to the hospital outpatient department prior authorization program for service dates on or after July 1, 2021.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_OPD_PA_011",
+    "category": "insurance",
+    "symptom_or_topic": "Hospital outpatient department facet joint interventions",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS added facet joint interventions to the hospital outpatient department prior authorization program for service dates on or after July 1, 2023.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization for Certain Hospital Outpatient Department Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-pre-claim-review-initiatives/prior-authorization-certain-hospital-outpatient-department-opd-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_HOME_HEALTH_012",
+    "category": "insurance",
+    "symptom_or_topic": "Medicare home health agency selected pre-claim review under Review Choice Demonstration",
+    "decision": "PRE_CLAIM_REVIEW_REQUIRED",
+    "reasoning": "Under the Review Choice Demonstration, home health agencies may select pre-claim review; services can begin before review, but review must occur before final claim submission.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "CMS - Review Choice Demonstration for Home Health Services",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-and-pre-claim-review-initiatives/review-choice-demonstration-home-health-services",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CMS - Review Choice Demonstration FAQs",
+        "url": "https://www.cms.gov/research-statistics-data-and-systems/monitoring-programs/medicare-ffs-compliance-programs/review-choice-demonstration/downloads/rcd-faqs.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_AMBULANCE_013",
+    "category": "insurance",
+    "symptom_or_topic": "Repetitive scheduled non-emergent ambulance transport under Medicare",
+    "decision": "PRIOR_AUTH_REQUIRED",
+    "reasoning": "CMS prior authorization applies to repetitive scheduled non-emergent ambulance transport to verify compliance with Medicare coverage, coding, and payment rules before services are rendered and claims submitted.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "CMS - Prior Authorization of Repetitive, Scheduled Non-Emergent Ambulance Transport",
+        "url": "https://www.cms.gov/data-research/monitoring-programs/medicare-fee-service-compliance-programs/prior-authorization-and-pre-claim-review-initiatives/prior-authorization-repetitive-scheduled-non-emergent-ambulance-transport-rsnat",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_CRC_014",
+    "category": "insurance",
+    "symptom_or_topic": "Medicare preventive colorectal cancer screening colonoscopy or stool-based screening with follow-up screening colonoscopy",
+    "decision": "PREVENTIVE_COVERED_NO_DEDUCTIBLE_OR_COINSURANCE",
+    "reasoning": "CMS guidance states deductible and coinsurance do not apply to covered non-invasive stool-based colorectal screening tests or qualifying follow-up screening colonoscopy.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "CMS - Updates to Colorectal Cancer Screening Policies",
+        "url": "https://www.cms.gov/files/document/mm14031-updates-colorectal-cancer-screening-hepatitis-b-vaccine-policies.pdf",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CMS - Medicare Claims Processing Manual Change Request R13248CP",
+        "url": "https://www.cms.gov/files/document/r13248cp.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "INSURANCE_PREVENTIVE_015",
+    "category": "insurance",
+    "symptom_or_topic": "Medicare preventive and screening services",
+    "decision": "CHECK_PREVENTIVE_COVERAGE",
+    "reasoning": "Medicare covers many preventive services, including exams, shots, lab tests, screenings, monitoring, counseling, and education; coverage frequency and cost-sharing depend on the specific service.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "Medicare.gov - Preventive and screening services",
+        "url": "https://www.medicare.gov/coverage/preventive-screening-services",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_CRC_001",
+    "category": "screening",
+    "symptom_or_topic": "Average-risk adults age 45 to 75 years",
+    "decision": "GET_SCREENING",
+    "reasoning": "USPSTF recommends colorectal cancer screening for adults age 45 to 75 years.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "USPSTF - Colorectal Cancer: Screening",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Screening for Colorectal Cancer",
+        "url": "https://www.cdc.gov/colorectal-cancer/screening/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_CRC_002",
+    "category": "screening",
+    "symptom_or_topic": "Adults age 76 to 85 years considering colorectal cancer screening",
+    "decision": "SCHEDULE_PCP",
+    "reasoning": "USPSTF recommends selective colorectal cancer screening from age 76 to 85 based on overall health, prior screening history, and patient preferences.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "USPSTF - Colorectal Cancer: Screening",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Screening for Colorectal Cancer",
+        "url": "https://www.cdc.gov/colorectal-cancer/screening/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_CRC_003",
+    "category": "screening",
+    "symptom_or_topic": "People at increased risk for colorectal cancer",
+    "decision": "SCHEDULE_PCP",
+    "reasoning": "People with increased colorectal cancer risk should discuss earlier start age, test choice, and screening interval with a clinician rather than following only average-risk rules.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "CDC - Screening for Colorectal Cancer",
+        "url": "https://www.cdc.gov/colorectal-cancer/screening/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_BREAST_004",
+    "category": "screening",
+    "symptom_or_topic": "Women age 40 to 74 years at average risk for breast cancer",
+    "decision": "GET_SCREENING",
+    "reasoning": "USPSTF recommends biennial screening mammography for women age 40 to 74 years.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "USPSTF - Breast Cancer: Screening",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Screening for Breast Cancer",
+        "url": "https://www.cdc.gov/breast-cancer/screening/index.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_BREAST_005",
+    "category": "screening",
+    "symptom_or_topic": "Women age 75 years or older considering breast cancer screening",
+    "decision": "SCHEDULE_PCP",
+    "reasoning": "USPSTF finds evidence insufficient for routine mammography screening in women age 75 or older; individualized clinician discussion is appropriate.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "USPSTF - Breast Cancer: Screening",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_CERVICAL_006",
+    "category": "screening",
+    "symptom_or_topic": "Women age 21 to 29 years with cervix",
+    "decision": "GET_SCREENING",
+    "reasoning": "USPSTF recommends cervical cancer screening every 3 years with cervical cytology alone for women age 21 to 29 years.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "USPSTF - Cervical Cancer: Screening",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_CERVICAL_007",
+    "category": "screening",
+    "symptom_or_topic": "Women age 30 to 65 years with cervix",
+    "decision": "GET_SCREENING",
+    "reasoning": "USPSTF recommends cervical cancer screening every 3 years with cytology alone, every 5 years with high-risk HPV testing alone, or every 5 years with cotesting.",
+    "confidence": 0.99,
+    "sources": [
+      {
+        "title": "USPSTF - Cervical Cancer: Screening",
+        "url": "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_VACCINE_008",
+    "category": "screening",
+    "symptom_or_topic": "Adults age 19 years or older: annual influenza vaccination",
+    "decision": "GET_SCREENING",
+    "reasoning": "CDC adult immunization schedule is used to determine age-based adult vaccine recommendations, including routine annual influenza vaccination for adults.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "CDC - Adult Immunization Schedule by Age",
+        "url": "https://www.cdc.gov/vaccines/hcp/imz-schedules/adult-age.html",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Recommended Adult Immunization Schedule",
+        "url": "https://www.cdc.gov/vaccines/hcp/imz-schedules/downloads/adult/adult-combined-schedule.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_VACCINE_009",
+    "category": "screening",
+    "symptom_or_topic": "Adults age 50 years or older: recombinant zoster vaccine",
+    "decision": "GET_SCREENING",
+    "reasoning": "CDC adult immunization schedule includes age-based shingles vaccination recommendations for adults beginning at age 50.",
+    "confidence": 0.98,
+    "sources": [
+      {
+        "title": "CDC - Adult Immunization Schedule by Age",
+        "url": "https://www.cdc.gov/vaccines/hcp/imz-schedules/adult-age.html",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Recommended Adult Immunization Schedule",
+        "url": "https://www.cdc.gov/vaccines/hcp/imz-schedules/downloads/adult/adult-combined-schedule.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "SCREENING_VACCINE_010",
+    "category": "screening",
+    "symptom_or_topic": "Adults age 50 years or older: pneumococcal vaccination status review",
+    "decision": "SCHEDULE_PCP",
+    "reasoning": "CDC adult immunization schedule should be used to determine whether pneumococcal vaccination is indicated based on age, prior vaccine history, and risk factors.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "CDC - Adult Immunization Schedule by Age",
+        "url": "https://www.cdc.gov/vaccines/hcp/imz-schedules/adult-age.html",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "CDC - Recommended Adult Immunization Schedule",
+        "url": "https://www.cdc.gov/vaccines/hcp/imz-schedules/downloads/adult/adult-combined-schedule.pdf",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "DRUG_METFORMIN_001",
+    "category": "drug",
+    "symptom_or_topic": "Metformin use with eGFR below 30 mL/min/1.73 m2",
+    "decision": "DRUG_CONTRAINDICATION",
+    "reasoning": "Metformin is contraindicated when eGFR is below 30 mL/min/1.73 m2 because drug accumulation increases risk of metformin-associated lactic acidosis.",
+    "confidence": 0.97,
+    "sources": [
+      {
+        "title": "StatPearls - Metformin",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK518983/",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "MedlinePlus - Metformin",
+        "url": "https://medlineplus.gov/druginfo/meds/a696005.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "DRUG_METFORMIN_002",
+    "category": "drug",
+    "symptom_or_topic": "Metformin use in hepatic impairment or hepatic failure",
+    "decision": "AVOID_AND_CONTACT_PRESCRIBER",
+    "reasoning": "Metformin should generally be avoided in hepatic impairment because impaired lactate clearance can increase lactic acidosis risk.",
+    "confidence": 0.95,
+    "sources": [
+      {
+        "title": "StatPearls - Metformin",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK518983/",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "Mayo Clinic - Metformin revisited",
+        "url": "https://www.mayoclinic.org/medical-professionals/endocrinology/news/metformin-revisited/mac-20430448",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "DRUG_METFORMIN_003",
+    "category": "drug",
+    "symptom_or_topic": "Metformin use with iodinated contrast in eGFR 30-60, hepatic impairment, alcoholism, heart failure, or intra-arterial contrast",
+    "decision": "HOLD_AND_RECHECK_RENAL_FUNCTION",
+    "reasoning": "FDA-labeled practice summarized by pharmacy guidance recommends discontinuing metformin before or at contrast administration in higher-risk patients and rechecking eGFR after 48 hours before restarting if renal function is stable.",
+    "confidence": 0.94,
+    "sources": [
+      {
+        "title": "University of Illinois Chicago Drug Information Group - Best practices on holding metformin prior to and post contrast administration",
+        "url": "https://dig.pharmacy.uic.edu/faqs/2023-2/september-2023-faqs/what-are-current-best-practices-on-holding-metformin-prior-to-and-post-contrast-administration/",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "StatPearls - Contrast-Induced Nephropathy",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK448066/",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "MedlinePlus - CT angiography head and neck",
+        "url": "https://medlineplus.gov/ency/article/007677.htm",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "DRUG_METFORMIN_004",
+    "category": "drug",
+    "symptom_or_topic": "Metformin use with excessive alcohol intake or binge drinking",
+    "decision": "AVOID_INTERACTION_AND_CONTACT_PRESCRIBER",
+    "reasoning": "Excess alcohol can increase risk of lactic acidosis and hypoglycemia in patients taking metformin; patients should avoid excessive alcohol and seek clinician guidance.",
+    "confidence": 0.93,
+    "sources": [
+      {
+        "title": "MedlinePlus - Metformin",
+        "url": "https://medlineplus.gov/druginfo/meds/a696005.html",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "Drugs.com - Metformin and Alcohol/Food Interactions",
+        "url": "https://www.drugs.com/food-interactions/metformin.html",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  },
+  {
+    "id": "DRUG_METFORMIN_005",
+    "category": "drug",
+    "symptom_or_topic": "Metformin use during acute hypoxia, shock, sepsis, circulatory failure, myocardial infarction, or severe dehydration",
+    "decision": "HOLD_AND_SEEK_URGENT_MEDICAL_ADVICE",
+    "reasoning": "Acute hypoxia, hypoperfusion, sepsis, shock, and severe dehydration increase risk of metformin-associated lactic acidosis and warrant urgent clinician review or temporary withholding.",
+    "confidence": 0.95,
+    "sources": [
+      {
+        "title": "Mayo Clinic - Metformin revisited",
+        "url": "https://www.mayoclinic.org/medical-professionals/endocrinology/news/metformin-revisited/mac-20430448",
+        "accessed_date": "2026-05-13"
+      },
+      {
+        "title": "StatPearls - Metformin-Associated Lactic Acidosis",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK580485/",
+        "accessed_date": "2026-05-13"
+      }
+    ]
+  }
+]

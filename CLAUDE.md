@@ -20,21 +20,23 @@ A production-grade healthcare AI platform covering:
 
 ### Python Backend Layer (`src/backend/`)
 
-6. **LangGraph Triage Agent** (`src/backend/agents/triage_agent.py`) — 5-node workflow: validate_input → enrich_with_history → call_claude_triage (extended thinking) → parse_and_route → calculate_cost_impact. Fetches real member claims + history from DB for context. Persists outcomes to audit log.
+6. **LangGraph Triage Agent** (`src/backend/agents/triage_agent.py`) — 6-node workflow: validate_input → enrich_with_history → search_kb → call_claude_triage (extended thinking) → parse_and_route → calculate_cost_impact. Fetches real member claims + history from DB for context. KB rules injected into Claude system prompt before the AI call. Persists outcomes to audit log. Returns `kb_match` (matched rule ID, decision, sources) in every response.
 
-7. **LangGraph Claims Agent** (`src/backend/agents/claims_agent.py`) — 4-node workflow: fetch_claims → parse_and_score → call_claude_insights → rank_campaigns. Scoring engine runs first; Claude receives structured analysis (not raw CPT codes) and generates narrative campaigns with ROI justification.
+7. **Healthcare Knowledge Base** (`src/backend/knowledge_base/`) — `healthcare_kb_decision_rules.json` holds 50 verified decision rules across four categories (emergency, insurance, screening, drug). `kb_search.py` provides `load_decision_rules()` (called once at server startup) and `search_kb(query, top_k)` (keyword scoring with stop-word filtering and phrase-level bonuses). Emergency rules with confidence > 0.95 are injected first in the Claude prompt. `kb_loader.py` handles the richer triage/conditions/preventive JSON files with embedding and Supabase storage support.
 
-8. **LangGraph Outcome Tracker** (`src/backend/agents/outcome_tracker.py`) — 5-node workflow tracking adherence rate, cost savings realized vs. missed, and risk score adjustment based on engagement behavior. Feedback loop for the AI to improve over time.
+8. **LangGraph Claims Agent** (`src/backend/agents/claims_agent.py`) — 4-node workflow: fetch_claims → parse_and_score → call_claude_insights → rank_campaigns. Scoring engine runs first; Claude receives structured analysis (not raw CPT codes) and generates narrative campaigns with ROI justification.
 
-9. **Actuarial Risk Scoring Engine** (`src/backend/scoring/risk_calculator.py`) — 5-dimension weighted model (condition burden 30%, utilization 30%, medication complexity 20%, age 10%, SDOH 10%) with comorbidity multiplier. See SCORING.md for full methodology.
+9. **LangGraph Outcome Tracker** (`src/backend/agents/outcome_tracker.py`) — 5-node workflow tracking adherence rate, cost savings realized vs. missed, and risk score adjustment based on engagement behavior. Feedback loop for the AI to improve over time.
 
-10. **Claims Analyzer** (`src/backend/scoring/claims_analyzer.py`) — ICD-10 prefix matching, CPT code bucketing, ER overutilization detection, 30-day readmission detection, condition-specific prevention gap identification.
+10. **Actuarial Risk Scoring Engine** (`src/backend/scoring/risk_calculator.py`) — 5-dimension weighted model (condition burden 30%, utilization 30%, medication complexity 20%, age 10%, SDOH 10%) with comorbidity multiplier. See SCORING.md for full methodology.
 
-11. **FastAPI Backend Server** (`src/backend/api/server.py`) — Serves `/api/backend/triage`, `/api/backend/claims`, `/api/backend/health/{id}`, `/api/backend/outcomes/{id}`. CORS configured for Next.js origin.
+11. **Claims Analyzer** (`src/backend/scoring/claims_analyzer.py`) — ICD-10 prefix matching, CPT code bucketing, ER overutilization detection, 30-day readmission detection, condition-specific prevention gap identification.
 
-12. **Supabase Data Layer** (`src/backend/database/`) — Lazy-init client with in-memory mock fallback. Seeder generates 100 members + 500+ clinically realistic claims. All queries have retry logic with exponential backoff.
+12. **FastAPI Backend Server** (`src/backend/api/server.py`) — Serves `/api/backend/triage`, `/api/backend/claims`, `/api/backend/health/{id}`, `/api/backend/outcomes/{id}`. CORS configured for Next.js origin. Calls `load_decision_rules()` at startup to cache the KB into memory.
 
-13. **Python Safety Layer** (`src/backend/safety/`) — `input_validation.py`: self-harm detection (returns 988), injection/jailbreak patterns, PII redaction, prescription/diagnosis request blocking. `output_filters.py`: diagnosis assertion blocking, confidence flagging, disclaimer injection.
+13. **Supabase Data Layer** (`src/backend/database/`) — Lazy-init client with in-memory mock fallback. Seeder generates 100 members + 500+ clinically realistic claims. All queries have retry logic with exponential backoff.
+
+14. **Python Safety Layer** (`src/backend/safety/`) — `input_validation.py`: self-harm detection (returns 988), injection/jailbreak patterns, PII redaction, prescription/diagnosis request blocking. `output_filters.py`: diagnosis assertion blocking, confidence flagging, disclaimer injection.
 
 ## Key Design Decisions
 

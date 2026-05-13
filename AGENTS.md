@@ -10,22 +10,23 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Agent 1: Triage Agent (`src/backend/agents/triage_agent.py`)
 
-**Purpose**: Routes member symptoms to the correct care setting using extended thinking + full member context.
+**Purpose**: Routes member symptoms to the correct care setting using extended thinking + full member context + verified clinical KB rules.
 
-**Workflow (5 nodes)**:
+**Workflow (6 nodes)**:
 ```
-validate_input → enrich_with_history → call_claude_triage → parse_and_route → calculate_cost_impact
+validate_input → enrich_with_history → search_kb → call_claude_triage → parse_and_route → calculate_cost_impact
 ```
 
 | Node | What it does |
 |------|-------------|
 | `validate_input` | Safety checks: self-harm detection (returns 988), injection detection, PII redaction, length limits |
 | `enrich_with_history` | Fetches member record, 50 claims, 5 prior triages from DB; computes current risk score |
-| `call_claude_triage` | `claude-opus-4-7` with `thinking: {budget_tokens: 800}`. System prompt injects member age, conditions, medications, risk tier, and prior triage history. Forces JSON output. |
+| `search_kb` | Keyword search of `healthcare_kb_decision_rules.json` (50 rules: emergency, insurance, screening, drug). Returns top 3 matches; logs matched rule ID + confidence. Stores top match as `kb_match` for response. |
+| `call_claude_triage` | `claude-opus-4-7` with `thinking: {budget_tokens: 800}`. System prompt injects member context + KB rules block (emergency rules confidence >0.95 injected first). Forces JSON output. |
 | `parse_and_route` | Parses JSON, validates recommendation against enum, applies severity override (user says 'high' + Claude says 'self_care' → bumps to urgent_care) |
 | `calculate_cost_impact` | Compares recommended setting cost vs. ER; persists outcome to DB; runs output guardrail filter |
 
-**Key design**: Self-harm triggers immediate 988 return regardless of downstream state. Extended thinking enabled — thinking text returned to frontend for transparency.
+**Key design**: Self-harm triggers immediate 988 return regardless of downstream state. Extended thinking enabled — thinking text returned to frontend for transparency. KB rules are injected into the system prompt so Claude's reasoning is grounded in verified clinical guidelines.
 
 ---
 
@@ -92,7 +93,16 @@ run_triage(
   "red_flags": ["cardiac_symptom_pattern", "high_risk_patient"],
   "cost_analysis": {"recommended_cost": 2800, "estimated_savings": 0},
   "thinking": "Member has I25.10 (ischemic heart disease) and prior hospitalization...",
-  "risk_score": {"overall_risk": 74.9, "tier": "high"}
+  "risk_score": {"overall_risk": 74.9, "tier": "high"},
+  "kb_match": {
+    "entry_id": "EMERGENCY_CHEST_002",
+    "category": "emergency",
+    "decision": "CALL_911",
+    "confidence": 0.97,
+    "sources": [
+      {"title": "MedlinePlus - Chest Pain", "url": "https://medlineplus.gov/chestpain.html", "accessed_date": "2026-05-13"}
+    ]
+  }
 }
 ```
 

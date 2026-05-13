@@ -5,7 +5,7 @@ import {
   AlertCircle, Activity, MessageSquare, TrendingUp,
   Users, Loader2, CheckCircle, Clock, Heart,
   BarChart3, Lock, ArrowRight, X, AlertTriangle, Info,
-  DollarSign
+  DollarSign, ExternalLink, ShieldAlert
 } from 'lucide-react';
 import { MOCK_MEMBERS } from '@/lib/mockData';
 
@@ -14,6 +14,15 @@ import { MOCK_MEMBERS } from '@/lib/mockData';
 type Tab = 'triage' | 'chat' | 'preventive' | 'dashboard';
 type CareLevel = 'emergency' | 'urgent_care' | 'telehealth' | 'pcp' | 'specialist' | 'self_care';
 
+interface KBSource { title: string; url: string; accessed_date?: string }
+interface KBMatch {
+  entry_id: string;
+  category: string;
+  decision: string;
+  confidence: number;
+  sources: KBSource[];
+}
+
 interface TriageResult {
   recommendation: { careLevel: CareLevel; label: string; confidence: number; timeToSee: string; estimatedCost: number };
   clinicalReasoning: string;
@@ -21,6 +30,7 @@ interface TriageResult {
   memberContext: { age: number; riskScore: number; activeConditions: number };
   costComparison: { recommended: { label: string; estimatedCost: number }; alternatives: Array<{ option: string; label: string; estimatedCost: number }>; potentialSavings: number };
   safetyInfo: { disclaimers: string[]; confidenceScore: number };
+  kbMatch?: KBMatch | null;
 }
 
 interface ChatMessage { role: 'user' | 'assistant'; content: string; timestamp: string; confidence?: number; warnings?: string[]; disclaimer?: string; responseTimeMs?: number; error?: boolean }
@@ -201,6 +211,95 @@ function MemberContext({ memberId }: { memberId: string }) {
   );
 }
 
+// ─── KB Match Card ────────────────────────────────────────────────
+
+const KB_DECISION_STYLE: Record<string, { bg: string; border: string; text: string; badge: string; label: string }> = {
+  CALL_911:            { bg: 'bg-red-50',    border: 'border-red-400',    text: 'text-red-900',    badge: 'bg-red-600 text-white',    label: 'CALL 911 IMMEDIATELY' },
+  GO_TO_ER:            { bg: 'bg-orange-50', border: 'border-orange-400', text: 'text-orange-900', badge: 'bg-orange-500 text-white', label: 'GO TO EMERGENCY ROOM' },
+  GO_TO_URGENT_CARE:   { bg: 'bg-yellow-50', border: 'border-yellow-400', text: 'text-yellow-900', badge: 'bg-yellow-500 text-white', label: 'GO TO URGENT CARE' },
+  PRIOR_AUTH_REQUIRED: { bg: 'bg-blue-50',   border: 'border-blue-300',   text: 'text-blue-900',   badge: 'bg-blue-600 text-white',   label: 'PRIOR AUTH REQUIRED' },
+  GET_SCREENING:       { bg: 'bg-teal-50',   border: 'border-teal-300',   text: 'text-teal-900',   badge: 'bg-teal-600 text-white',   label: 'SCREENING RECOMMENDED' },
+  SCHEDULE_PCP:        { bg: 'bg-teal-50',   border: 'border-teal-300',   text: 'text-teal-900',   badge: 'bg-teal-600 text-white',   label: 'SCHEDULE WITH PCP' },
+};
+const KB_DEFAULT_STYLE = { bg: 'bg-gray-50', border: 'border-gray-300', text: 'text-gray-900', badge: 'bg-gray-600 text-white', label: '' };
+
+const KB_CATEGORY_LABEL: Record<string, string> = {
+  emergency: 'EMERGENCY GUIDELINE',
+  urgent:    'URGENT CARE GUIDELINE',
+  insurance: 'INSURANCE GUIDANCE',
+  screening: 'PREVENTIVE SCREENING',
+  drug:      'MEDICATION GUIDANCE',
+};
+
+function KBMatchCard({ match }: { match: KBMatch }) {
+  const style = KB_DECISION_STYLE[match.decision] ?? KB_DEFAULT_STYLE;
+  const label = style.label || match.decision.replace(/_/g, ' ');
+  const categoryLabel = KB_CATEGORY_LABEL[match.category] ?? 'CLINICAL GUIDELINE';
+  const isEmergency = match.category === 'emergency';
+
+  return (
+    <div className={`rounded-xl border-2 p-5 ${style.bg} ${style.border}`}>
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4 gap-2">
+        <div className="flex items-center gap-2">
+          <ShieldAlert size={16} className={`${style.text} opacity-70 flex-shrink-0`} />
+          <p className={`text-xs font-bold uppercase tracking-widest ${style.text} opacity-70`}>
+            {categoryLabel}
+          </p>
+        </div>
+        <span className={`text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${style.badge}`}>
+          {label}
+        </span>
+      </div>
+
+      {/* Rule + confidence */}
+      <div className={`flex items-center justify-between py-2 border-t border-b mb-4 ${style.border} gap-4`}>
+        <div>
+          <p className={`text-xs opacity-50 uppercase tracking-wide font-semibold ${style.text}`}>Matched Rule</p>
+          <code className={`text-sm font-mono font-bold mt-0.5 block ${style.text}`}>{match.entry_id}</code>
+        </div>
+        <div className="text-right flex-shrink-0">
+          <p className={`text-xs opacity-50 uppercase tracking-wide font-semibold ${style.text}`}>Confidence</p>
+          <p className={`text-lg font-bold mt-0.5 ${style.text}`}>{Math.round(match.confidence * 100)}%</p>
+        </div>
+      </div>
+
+      {/* Sources */}
+      {match.sources.length > 0 && (
+        <div>
+          <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${style.text} opacity-50`}>
+            Clinical Sources
+          </p>
+          <ul className="space-y-1.5">
+            {match.sources.map((src, i) => (
+              <li key={i}>
+                <a
+                  href={src.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-start gap-1.5 text-xs hover:underline ${style.text} opacity-80 hover:opacity-100 transition-opacity`}
+                >
+                  <ExternalLink size={11} className="flex-shrink-0 mt-0.5" />
+                  {src.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Pulse strip for 911 urgency */}
+      {isEmergency && match.decision === 'CALL_911' && (
+        <div className="mt-4 p-2.5 bg-red-600 rounded-lg text-center">
+          <p className="text-white text-xs font-bold uppercase tracking-widest animate-pulse">
+            ⚠ This is a medical emergency — call 911 now
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Triage Section ───────────────────────────────────────────────
 
 function TriageSection() {
@@ -288,6 +387,9 @@ function TriageSection() {
               </div>
               <p className="text-sm leading-relaxed mt-3 text-gray-800">{result.clinicalReasoning}</p>
             </div>
+
+            {/* KB matched rule */}
+            {result.kbMatch && <KBMatchCard match={result.kbMatch} />}
 
             {/* Red flags */}
             {result.reasoning.redFlags.length > 0 && (

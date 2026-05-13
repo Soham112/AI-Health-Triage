@@ -28,6 +28,10 @@ from src.backend.database.queries import (
     save_triage_outcome,
     save_audit_log,
 )
+from src.backend.knowledge_base.kb_search import (
+    search_kb,
+    format_kb_rules_for_prompt,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +84,10 @@ class TriageState(TypedDict):
     claims: list[dict]
     triage_history: list[dict]
     risk_score: dict | None
+
+    # KB match (populated before Claude call)
+    matched_kb_rules: list[dict]
+    kb_match: dict | None   # top matched rule surfaced in final response
 
     # Claude output
     raw_claude_output: str
@@ -142,8 +150,35 @@ def _enrich_with_history_node(state: TriageState) -> TriageState:
     }
 
 
+def _search_kb_node(state: TriageState) -> TriageState:
+    """Node 3: Search KB for rules matching the symptom input."""
+    if state.get("error"):
+        return state
+
+    symptoms = state["symptoms"]
+    matched = search_kb(symptoms, top_k=3)
+
+    # Pick the top match (highest score, already sorted) for the response payload
+    top_match = None
+    if matched:
+        top = matched[0]
+        top_match = {
+            "entry_id": top["id"],
+            "category": top["category"],
+            "decision": top["decision"],
+            "confidence": top["confidence"],
+            "sources": top.get("sources", []),
+        }
+        logger.info(
+            f"KB matched rule {top['id']} (category={top['category']}, "
+            f"confidence={top['confidence']}) for symptoms: '{symptoms[:80]}'"
+        )
+
+    return {**state, "matched_kb_rules": matched, "kb_match": top_match}
+
+
 def _call_claude_triage_node(state: TriageState) -> TriageState:
-    """Node 3: Extended-thinking Claude call with full member context."""
+    """Node 4: Extended-thinking Claude call with full member context + KB rules."""
     if state.get("error"):
         return state
 
@@ -184,8 +219,20 @@ Provide your routing recommendation as JSON per the system instructions."""
             temperature=1,  # required when thinking is enabled
         )
 
+        # Append KB rules to system prompt when available; always inject emergency rules
+        matched_rules = state.get("matched_kb_rules") or []
+        emergency_rules = [
+            r for r in matched_rules
+            if r.get("category") == "emergency" and float(r.get("confidence", 0)) > 0.95
+        ]
+        # Inject emergency rules first (highest priority), then remaining matched rules
+        inject_rules = emergency_rules + [r for r in matched_rules if r not in emergency_rules]
+        kb_block = format_kb_rules_for_prompt(inject_rules)
+
+        system_content = TRIAGE_SYSTEM_PROMPT + kb_block
+
         messages = [
-            SystemMessage(content=TRIAGE_SYSTEM_PROMPT),
+            SystemMessage(content=system_content),
             HumanMessage(content=user_content),
         ]
 
@@ -303,13 +350,15 @@ def _build_triage_graph() -> Any:
 
     graph.add_node("validate_input", _validate_input_node)
     graph.add_node("enrich_with_history", _enrich_with_history_node)
+    graph.add_node("search_kb", _search_kb_node)
     graph.add_node("call_claude_triage", _call_claude_triage_node)
     graph.add_node("parse_and_route", _parse_and_route_node)
     graph.add_node("calculate_cost_impact", _calculate_cost_impact_node)
 
     graph.set_entry_point("validate_input")
     graph.add_edge("validate_input", "enrich_with_history")
-    graph.add_edge("enrich_with_history", "call_claude_triage")
+    graph.add_edge("enrich_with_history", "search_kb")
+    graph.add_edge("search_kb", "call_claude_triage")
     graph.add_edge("call_claude_triage", "parse_and_route")
     graph.add_edge("parse_and_route", "calculate_cost_impact")
     graph.add_edge("calculate_cost_impact", END)
@@ -336,6 +385,8 @@ def run_triage(symptoms: str, severity: str, member_id: str) -> dict:
         "claims": [],
         "triage_history": [],
         "risk_score": None,
+        "matched_kb_rules": [],
+        "kb_match": None,
         "raw_claude_output": "",
         "parsed_recommendation": {},
         "recommendation": "pcp",
@@ -368,5 +419,6 @@ def run_triage(symptoms: str, severity: str, member_id: str) -> dict:
         "thinking": final_state["thinking"],
         "risk_score": final_state["risk_score"],
         "triage_history": final_state["triage_history"][:3],
+        "kb_match": final_state.get("kb_match"),
         "error": None,
     }
