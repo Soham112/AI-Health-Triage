@@ -2,6 +2,40 @@
 
 # Arlo Health AI Platform — Engineering Context
 
+## Deployment Status (as of 2026-05-13)
+
+### Shipped (Production)
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Next.js frontend + API routes | ✅ Deployed (Vercel) | All 4 tabs live |
+| Triage API (TS fallback path) | ✅ Live | Extended thinking enabled |
+| Chat API | ✅ Live | Haiku, confidence scoring, rate limiting |
+| Preventive API | ✅ Live | Claims pattern + ROI campaigns |
+| Dashboard API | ✅ Live | Population analytics |
+| Healthcare KB (50 decision rules) | ✅ Live | `healthcare_kb_decision_rules.json` |
+| Python FastAPI backend | ✅ Deployed (Railway) | LangGraph agents active |
+| LangGraph Triage Agent (6 nodes) | ✅ Live | Primary path when `PYTHON_BACKEND_URL` set |
+| LangGraph Claims Agent (4 nodes) | ✅ Live | ROI-ranked campaigns |
+| Outcome Tracker (5 nodes) | ✅ Live | Feedback loop, adherence scoring |
+| Actuarial risk scoring | ✅ Live | 5-dimension model, comorbidity multiplier |
+| Safety layer (TS + Python) | ✅ Live | Self-harm→988, PII redaction, Rx blocking |
+| Mock data (50 members, 500+ claims) | ✅ Live | Seeder available for Supabase |
+| Evaluation framework | ✅ Live | `eval_triage.py`, 22 test cases |
+
+### In Progress / Planned
+| Component | Status | Notes |
+|-----------|--------|-------|
+| JWT auth | 🔲 Planned | Wire `jose` into proxy; all member IDs currently accepted |
+| Redis rate limiting | 🔲 Planned | Replace in-memory Map with Upstash Redis |
+| Supabase persistence | 🔲 Planned | Schema ready (`schema.sql`); add env vars to activate |
+| pgvector embeddings | 🔲 Planned | Scaffold in `embedding.ts`; needs OpenAI/Cohere API key |
+| Encryption key rotation | 🔲 Planned | `FIELD_ENCRYPTION_KEY` versioning in `encryption.ts` |
+| Monitoring (Datadog/Sentry) | 🔲 Planned | Audit log structure is SIEM-ready |
+| Claims Campaign Agent | 🚧 In progress | `claims_campaign_agent.py` — skeleton exists |
+
+---
+
+
 ## What Was Built
 
 A production-grade healthcare AI platform covering:
